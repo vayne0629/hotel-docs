@@ -128,6 +128,12 @@ textarea{min-height:72px;resize:vertical}
 .ex .enOnly,.room .enOnly{grid-column:1/-1}
 body:not(.en) .enOnly{display:none!important}
 #coBox.off,#privBox.off{display:none}
+.hsbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;max-width:794px;margin:0 auto 10px;padding:10px 14px;border-radius:10px;font-size:14px;background:var(--warn);border:1px solid light-dark(#e8b56a,#7a5a2a)}
+.hsbar span{flex:1 1 260px}
+input.locked{background:light-dark(#f1efeb,#26262d);color:var(--mute);cursor:not-allowed;border-style:dashed}
+.lockn{font-size:12px;color:var(--acc);margin-inline-start:6px}
+.rtmap .row.off input{background:light-dark(#f1efeb,#26262d);color:var(--mute);border-style:dashed}
+.rtmap .row.off .tagoff{font-size:12px;color:var(--acc);text-align:center}
 .bkbox{display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
 /* ---------- 手機／平板 ---------- */
 .mview{display:none}
@@ -295,7 +301,7 @@ body{padding-bottom:64px}
    所以選「預設值」或「無」都會印得一樣；顏色也強制照印，不受「背景圖形」勾選影響 */
 @page{size:A4;margin:0}
 html,body{background:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.mview{display:none!important}.paper-wrap{display:block!important}body{padding:0!important}
+header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.mview,.hsbar{display:none!important}.paper-wrap{display:block!important}body{padding:0!important}
 .wrap,.paper-wrap{display:block;padding:0;max-width:none;position:static}.pv{overflow:visible;padding:0}
 .sheet{box-shadow:none;max-width:none;width:210mm;min-height:0;padding:14mm;font-size:12px;zoom:1!important;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .sheet{padding-bottom:calc(14mm + var(--fh,40mm))}
@@ -305,7 +311,7 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
 </head>
 <body>
 <header class="top">
-  <h1>飯店單據<small>櫃檯作業工具・版本 1127-J</small></h1>
+  <h1>飯店單據<small>櫃檯作業工具・版本 1128-A</small></h1>
   <div class="seg" role="group" aria-label="單據類型" id="typeSeg">
     <button type="button" data-type="stay">住房明細<small>已入住・會計收據用</small></button>
     <button type="button" data-type="quote">報價單<small>尚未訂房・詢價</small></button>
@@ -526,6 +532,10 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
   </form>
 
   <div class="paper-wrap">
+    <div class="hsbar hide" id="hsBar" role="status">
+      <span>這張單據使用<b>開立當時</b>的飯店資料，和目前的統一設定不同。</span>
+      <button type="button" class="sm" id="hsUpd">更新鎖定資料</button>
+    </div>
     <div class="pv" id="pv">
     <article class="sheet" id="sheet">
       <div class="lh">
@@ -669,6 +679,25 @@ if(!Array.isArray(cfg.hotels)||!cfg.hotels.length){cfg.hotels=DEF_HOTELS.map(h=>
 const curHotel=()=>cfg.hotels.find(h=>h.id===cfg.cur)||cfg.hotels[0];
 {const tw=cfg.hotels.find(h=>h.id==='twin');if(tw&&tw.annex===undefined&&cfg.hotels.some(h=>h.id==='seh')){tw.annex='seh';tw.annexTag='快捷館';tw.annexTagEn='Express Wing'}}
 if(!st.hid||!cfg.hotels.some(h=>h.id===st.hid))st.hid=cfg.cur;else cfg.cur=st.hid;
+/* ===== 統一設定：寫在程式裡，所有櫃檯電腦一致；有填值的欄位會鎖定，櫃檯不能改 =====
+   要修改：改這裡的內容並把 ver 換成新的日期編號，上傳後各台電腦按 Ctrl+F5 即可 */
+const OFFICIAL={ver:'2026-11-28-1',
+  hotels:{
+    ent: {name:'企業家大飯店',en:'The Enterpriser Hotel',addr:'',addrEn:'',tel:'',fax:''},
+    twin:{name:'雙星大飯店',en:'Twinstar Hotel',addr:'',addrEn:'',tel:'',fax:'',annexNote:'',annexNoteEn:''},
+    seh: {name:'台中車站快捷旅店',en:'Station Express Hotel Taichung',addr:'',addrEn:'',tel:'',fax:''}},
+  rt:[] /* 例：{zh:'標準雙人房',en:'Standard Double'} */};
+const LOCK_KEYS=['name','en','addr','addrEn','tel','fax','annexTag','annexTagEn','annexNote','annexNoteEn'];
+const offVal=(hid,k)=>{const o=OFFICIAL.hotels[hid];return o&&o[k]!=null&&String(o[k]).trim()!==''?o[k]:null};
+const isLocked=(hid,k)=>offVal(hid,k)!==null;
+cfg.hotels.forEach(h=>LOCK_KEYS.forEach(k=>{const v=offVal(h.id,k);if(v!==null)h[k]=v}));
+cfg.rt=cfg.rt.filter(x=>!OFFICIAL.rt.some(o=>o.zh===x.zh));
+const effRT=()=>[...OFFICIAL.rt,...cfg.rt];
+/* 單據開立時記下當時的飯店資料與房型對照；之後統一設定更新，舊單據不會自動改變 */
+const snapHS=()=>{const H=curHotel(),h={};LOCK_KEYS.forEach(k=>{if(H[k]!=null)h[k]=H[k]});return{ver:OFFICIAL.ver,hid:H.id,h,rt:JSON.parse(JSON.stringify(effRT()))}};
+const docHotel=()=>{const H=curHotel(),hs=st.hs;return hs&&hs.hid===H.id?{...H,...hs.h}:H};
+const hsStale=()=>{const hs=st.hs;if(!hs||hs.hid!==curHotel().id)return false;const n=snapHS();return JSON.stringify({h:hs.h,rt:hs.rt})!==JSON.stringify({h:n.h,rt:n.rt})};
+if(!st.hs)st.hs=snapHS();
 const annexOf=H=>H&&H.annex?cfg.hotels.find(h=>h.id===H.annex&&h.id!==H.id):null;
 /* 發票章：每家飯店各一個，只存在這台電腦的瀏覽器（localStorage） */
 if(cfg.stamp!==undefined||cfg.stampSize!==undefined){delete cfg.stamp;delete cfg.stampSize} /* 舊版不分飯店的印章作廢，需重新選取 */
@@ -676,7 +705,7 @@ cfg.stamps=cfg.stamps||{};cfg.stampSizes=cfg.stampSizes||{};
 const stampOf=()=>cfg.stamps[curHotel().id]||'';
 const stampSz=()=>cfg.stampSizes[curHotel().id]||32;
 const saveCfg=()=>{try{localStorage.setItem('hotelQuoteCfg',JSON.stringify(cfg))}catch(e){}};
-const mapEn=zh=>{const k=String(zh||'').trim();if(!k)return'';const m=cfg.rt.find(x=>x.zh.trim()===k);return m?m.en.trim():''};
+const mapEn=zh=>{const k=String(zh||'').trim();if(!k)return'';const f=L=>(L||[]).find(x=>String(x.zh).trim()===k);const m=f(st&&st.hs&&st.hs.rt)||f(effRT());return m?m.en.trim():''};
 
 function nightList(){const a=st.v.dIn,b=st.v.dOut;if(!a||!b)return[];const out=[];for(let d=a,k=0;d<b&&k<90;d=addDay(d,1),k++)out.push(d);return out}
 
@@ -756,14 +785,14 @@ function dayGroups(c,merge){
 function render(sim){
   const v=st.v,c=calc(),ty=st.type,lg=st.lang,t=L[lg],en=lg==='en';let s=st.s;
   const fD=x=>{if(!x)return'';const d=new Date(x+'T00:00');return en?d.toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'}):fmtD(x)};
-  const HH=curHotel(),AX=annexOf(HH),axTag=(HH.annexTag||'快捷館').trim();
+  const HH=docHotel(),AX=annexOf(HH),axTag=(HH.annexTag||'快捷館').trim();
   const isAx=l=>!!(AX&&axTag&&String(l.type||'').includes(axTag));
   const baseT=l=>isAx(l)?String(l.type).replace(axTag,'').replace(/^[\s\-－–—（(]+|[\s\-－–—）)]+$/g,'').trim():l.type;
   const rName=l=>en?(l.en||mapEn(l.type)||mapEn(baseT(l))||baseT(l)):baseT(l);
   const rLabel=l=>esc(rName(l))+(isAx(l)&&!(en&&(l.en||mapEn(l.type)))?`<span class="rtag">${esc(en?(HH.annexTagEn||'Annex'):axTag)}</span>`:'');
   const anyAx=c.lines.some(isAx), xName=x=>en?(x.en||x.name):x.name;
   $('nightsHint').textContent=c.n?`共 ${c.n} 晚`:'請選擇入住與退房日期';
-  const H=curHotel(),hasLogo=!!H.logo;
+  const H=docHotel(),hasLogo=!!H.logo;
   const showAx=!!(AX&&AX.logo&&hasLogo&&(anyAx||H.annexLogo));
   $('pLogo2').classList.toggle('hide',!showAx);if(showAx&&$('pLogo2').getAttribute('src')!==AX.logo)$('pLogo2').src=AX.logo;
   $('pLogo2').alt=showAx?(en?(AX.en||AX.name):(AX.name||AX.en)):'';
@@ -844,6 +873,7 @@ function render(sim){
   $('pSign').classList.toggle('has-stamp',useSt);
   if(useSt&&$('pStamp').getAttribute('src')!==stampOf())$('pStamp').src=stampOf();
   $('sheet').style.setProperty('--stw',stampSz()+'mm');$('sheet').style.setProperty('--lgh',(curHotel().logoH||17)+'mm');
+  $('hsBar').classList.toggle('hide',!hsStale());
   $('pFoot').textContent=st.foot[ty+'_'+lg]??FOOT[lg][ty];
   $('depBox').style.visibility=v.pay==='已付訂金'?'visible':'hidden';
   $('srcOtherBox').classList.toggle('hide',ty!=='stay'||v.src!=='其他');
@@ -1004,10 +1034,10 @@ function blankFrom(src){const h=src.v;return{type:src.type,lang:src.lang,foot:sr
   v:{...extra(),hStaff:h.hStaff,gName:'',gMobile:'',gFax:'',gEmail:'',dIn:today(),dOut:addDay(today(),1),svc:h.svc,disc:'',note:h.note,noteEn:h.noteEn,via:h.via,src:h.src,cxH:h.cxH},
   s:sDef(),rooms:[{id:uid(),type:'',en:'',no:'',qty:'1',p:{}}],extras:[],ver:5}}
 function openDoc(id){save();docs.cur=id;st=normSt(curDoc().st);lastJ=JSON.stringify(st);
-  if(st.hid&&cfg.hotels.some(h=>h.id===st.hid))cfg.cur=st.hid;else st.hid=cfg.cur;saveCfg();
+  if(st.hid&&cfg.hotels.some(h=>h.id===st.hid))cfg.cur=st.hid;else st.hid=cfg.cur;saveCfg();if(!st.hs)st.hs=snapHS();
   fillForm();render();renderDocBar();persistDocs();
   const t=document.querySelector(`.dtab[data-doc="${id}"]`);if(t)t.scrollIntoView({block:'nearest',inline:'nearest'})}
-function newDoc(){const d={id:uid(),name:'',t:Date.now(),st:blankFrom(st)};docs.list.push(d);openDoc(d.id);showTab(1);toast('已開新單據（新分頁），原本的單據已保存在下方分頁')}
+function newDoc(){const nb=blankFrom(st);nb.hs=snapHS();const d={id:uid(),name:'',t:Date.now(),st:nb};docs.list.push(d);openDoc(d.id);showTab(1);toast('已開新單據（新分頁），原本的單據已保存在下方分頁')}
 function dupDoc(){save();const d={id:uid(),name:(curDoc().name?curDoc().name+'（複製）':''),t:Date.now(),st:JSON.parse(JSON.stringify(st))};
   const i=docs.list.findIndex(x=>x.id===docs.cur);docs.list.splice(i+1,0,d);openDoc(d.id);toast('已複製成新的分頁，可以放心修改')}
 function delDoc(id){const i=docs.list.findIndex(x=>x.id===id);if(i<0)return;const was=docs.cur===id;docs.list.splice(i,1);
@@ -1075,16 +1105,18 @@ $('bkFile').addEventListener('change',e=>{const f=e.target.files[0];e.target.val
     st=normSt(curDoc().st);lastJ=JSON.stringify(st);fillForm();render();renderDocBar();
     const m=`匯入完成：新增 ${add} 張、更新 ${upd} 張單據${st0?`、${st0} 個發票章`:''}，飯店設定已合併。`;$('bkMsg').textContent=m;toast(m)};
   rd.readAsText(f)});
+$('hsUpd').addEventListener('click',()=>{st.hs=snapHS();fillForm();render();toast('已更新為最新的飯店資料與房型名稱')});
 function renderRtMap(){
-  $('rtMap').innerHTML='<div class="hd"><span>中文房型名稱</span><span>英文房型名稱</span><span></span></div>'+(cfg.rt.length?cfg.rt.map((x,i)=>`<div class="row">
+  $('rtMap').innerHTML='<div class="hd"><span>中文房型名稱</span><span>英文房型名稱</span><span></span></div>'+OFFICIAL.rt.map(x=>`<div class="row off" title="統一設定，所有櫃檯電腦相同">
+    <input value="${esc(x.zh)}" readonly aria-label="統一設定房型"><input value="${esc(x.en)}" readonly aria-label="統一設定英文名稱"><span class="tagoff">🔒</span></div>`).join('')+(cfg.rt.length?cfg.rt.map((x,i)=>`<div class="row">
     <input data-rt="${i}" data-f="zh" value="${esc(x.zh)}" aria-label="中文房型名稱 ${i+1}" placeholder="例：豪華雙人房">
     <input data-rt="${i}" data-f="en" value="${esc(x.en)}" aria-label="英文房型名稱 ${i+1}" placeholder="例：Deluxe Double">
-    <button type="button" class="x" data-rtrm="${i}" aria-label="刪除房型對照 ${i+1}">✕</button></div>`).join(''):'<div class="empty">尚未設定任何房型。</div>');
+    <button type="button" class="x" data-rtrm="${i}" aria-label="刪除房型對照 ${i+1}">✕</button></div>`).join(''):(OFFICIAL.rt.length?'':'<div class="empty">尚未設定任何房型。</div>'));
   updRtList();
 }
-function updRtList(){$('rtList').innerHTML=cfg.rt.filter(x=>x.zh.trim()).map(x=>`<option value="${esc(x.zh)}">${esc(x.en)}</option>`).join('')}
+function updRtList(){$('rtList').innerHTML=effRT().filter(x=>x.zh.trim()).map(x=>`<option value="${esc(x.zh)}">${esc(x.en)}</option>`).join('')}
 function updRoomEnPh(){st.rooms.forEach((r,i)=>{const e=$('re'+i);if(e)e.placeholder=mapEn(r.type)||'例：Deluxe Double'})}
-$('rtMap').addEventListener('input',e=>{const el=e.target;if(el.dataset.rt===undefined)return;e.stopPropagation();cfg.rt[+el.dataset.rt][el.dataset.f]=el.value;saveCfg();updRtList();updRoomEnPh();render()});
+$('rtMap').addEventListener('input',e=>{const el=e.target;if(el.dataset.rt===undefined)return;e.stopPropagation();cfg.rt[+el.dataset.rt][el.dataset.f]=el.value;saveCfg();st.hs=snapHS();updRtList();updRoomEnPh();render()});
 $('rtMap').addEventListener('click',e=>{const i=e.target.closest('[data-rtrm]')?.dataset.rtrm;if(i===undefined)return;cfg.rt.splice(+i,1);saveCfg();renderRtMap();updRoomEnPh();render()});
 $('bRt').addEventListener('click',()=>{cfg.rt.push({zh:'',en:''});saveCfg();renderRtMap();$('rtMap').querySelector(`[data-rt="${cfg.rt.length-1}"][data-f="zh"]`).focus()});
 /* ---------- 電子印章 ---------- */
@@ -1125,18 +1157,21 @@ function renderHotels(){
   const H=curHotel();
   $('hotels').innerHTML=cfg.hotels.map(h=>`<button type="button" role="radio" aria-checked="${h.id===H.id}" data-hid="${esc(h.id)}"><span class="lg">${h.logo?`<img src="${h.logo}" alt="">`:`<span>${esc(h.name||h.en||'未命名')}</span>`}</span><span class="nm">${esc(h.name||h.en||'未命名飯店')}</span></button>`).join('');
   $('hAnnex').innerHTML='<option value="">（沒有分館）</option>'+cfg.hotels.filter(h=>h.id!==H.id).map(h=>`<option value="${esc(h.id)}">${esc(h.name||h.en||'未命名飯店')}</option>`).join('');
-  document.querySelectorAll('[data-h]').forEach(el=>{el.value=H[el.dataset.h]||''});
+  document.querySelectorAll('[data-h]').forEach(el=>{el.value=H[el.dataset.h]||'';const lk=isLocked(H.id,el.dataset.h);
+    if(el.tagName==='INPUT'){el.readOnly=lk;el.classList.toggle('locked',lk)}
+    const lb=document.querySelector(`label[for="${el.id}"]`);if(lb){let t=lb.querySelector('.lockn');if(lk&&!t){t=document.createElement('span');t.className='lockn';t.textContent='🔒 統一設定';lb.append(t)}else if(!lk&&t)t.remove()}});
+  $('hDel').title=OFFICIAL.hotels[H.id]?'統一設定的飯店不能刪除':'';
   document.querySelectorAll('[data-hc]').forEach(el=>{el.checked=!!H[el.dataset.hc]});
   $('hLogoH').value=H.logoH||17;$('hLogoHV').textContent=H.logoH||17;$('hLogoH').disabled=!H.logo;
   $('annexBox').classList.toggle('hide',!annexOf(H));
   $('hLogoPrev').innerHTML=H.logo?`<img src="${H.logo}" alt="Logo 預覽">`:'未使用 Logo，單據上會顯示文字名稱';
   $('hLogoUp').textContent=H.logo?'更換 Logo':'上傳 Logo';$('hLogoDel').disabled=!H.logo;
-  $('hDel').disabled=cfg.hotels.length<2;$('hRestore').classList.toggle('hide',!missingDef().length);
+  $('hDel').disabled=cfg.hotels.length<2||!!OFFICIAL.hotels[H.id];$('hRestore').classList.toggle('hide',!missingDef().length);
 }
 function saveHotels(){try{localStorage.setItem('hotelQuoteCfg',JSON.stringify(cfg));return true}catch(e){toast('儲存空間不足，請換一張較小的 Logo 圖片');return false}}
-$('hotels').addEventListener('click',e=>{const b=e.target.closest('[data-hid]');if(!b)return;cfg.cur=b.dataset.hid;st.hid=cfg.cur;saveHotels();st.s.stamp=0;syncS('stamp');renderHotels();renderStamp();render();toast('已切換為「'+(curHotel().name||curHotel().en)+'」')});
+$('hotels').addEventListener('click',e=>{const b=e.target.closest('[data-hid]');if(!b)return;cfg.cur=b.dataset.hid;st.hid=cfg.cur;st.hs=snapHS();saveHotels();st.s.stamp=0;syncS('stamp');renderHotels();renderStamp();render();toast('已切換為「'+(curHotel().name||curHotel().en)+'」')});
 document.querySelector('.hedit').addEventListener('change',e=>{const k=e.target.dataset.hc;if(!k)return;e.stopPropagation();curHotel()[k]=e.target.checked?1:0;saveHotels();render()});
-document.querySelector('.hedit').addEventListener('input',e=>{if(e.target.dataset.hc)e.stopPropagation();const k=e.target.dataset.h;if(!k)return;e.stopPropagation();curHotel()[k]=e.target.value;saveHotels();if(k==='annex')$('annexBox').classList.toggle('hide',!annexOf(curHotel()));
+document.querySelector('.hedit').addEventListener('input',e=>{if(e.target.dataset.hc)e.stopPropagation();const k=e.target.dataset.h;if(!k)return;e.stopPropagation();if(isLocked(curHotel().id,k))return;curHotel()[k]=e.target.value;saveHotels();st.hs=snapHS();if(k==='annex')$('annexBox').classList.toggle('hide',!annexOf(curHotel()));
   const b=document.querySelector(`[data-hid="${curHotel().id}"] .nm`);if(b)b.textContent=curHotel().name||curHotel().en||'未命名飯店';render()});
 $('hLogoH').addEventListener('input',e=>{e.stopPropagation();const H=curHotel();H.logoH=+e.target.value;$('hLogoHV').textContent=e.target.value;saveHotels();render()});
 $('hLogoHR').addEventListener('click',()=>{const H=curHotel();delete H.logoH;saveHotels();renderHotels();render();toast('Logo 已還原預設大小（17 mm）')});
