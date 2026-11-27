@@ -135,6 +135,37 @@ textarea{min-height:72px;resize:vertical}
 .ex .enOnly,.room .enOnly{grid-column:1/-1}
 body:not(.en) .enOnly{display:none!important}
 #coBox.off,#privBox.off{display:none}
+/* ---------- 長住模式 ---------- */
+body:not(.ls-on) .ls-only{display:none!important}
+body.ls-on .nm-only{display:none!important}
+.lsmode{display:flex;gap:12px;align-items:center;padding:8px 12px;margin:4px 0 12px;border:1px solid var(--line);border-radius:10px;background:var(--field)}
+.lsroom{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;background:var(--panel)}
+.lshead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.lshead b{font:700 15px "Noto Serif TC",serif}
+.lsstep{padding:10px;border-radius:10px;background:var(--field);margin-bottom:8px}
+.lsf{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
+.lsf input{flex:1 1 80px;min-width:0;min-height:38px;padding:6px 8px;font-size:14px}
+.lsf input[data-ff=t],.lsf input[data-bf=t],.lsf input[data-bf=w]{flex:1 1 100%}
+.lsf button{flex:1 1 100%;min-height:38px;font-size:14px}
+.lsq{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.lsgrid-wrap{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:8px}
+.lsgrid{width:100%;min-width:470px;border-collapse:collapse;font-size:13px;table-layout:fixed}
+.lsgrid col.ck{width:30px}.lsgrid col.dt{width:78px}.lsgrid col.ty{width:auto}.lsgrid col.no{width:56px}.lsgrid col.pr{width:72px}.lsgrid col.px{width:46px}.lsgrid col.wy{width:96px}
+.lsgrid input:not([type=checkbox]){width:100%!important}
+.lsgrid th{position:sticky;top:0;background:var(--panel);text-align:start;font-weight:500;color:var(--mute);padding:6px 4px;border-bottom:1px solid var(--line);z-index:1}
+.lsgrid td{padding:2px 3px;border-bottom:1px solid var(--line)}
+.lsgrid td.d{white-space:nowrap;padding-inline:6px}
+.lsgrid input{min-height:32px;padding:3px 6px;font-size:13px;border-radius:6px}
+.lsgrid input[type=checkbox]{width:18px;height:18px;min-height:0;accent-color:var(--acc)}
+.lsgrid tr.we{background:var(--wk)}
+.lsgrid tr.chg td{box-shadow:inset 0 0 0 9999px light-dark(rgba(122,31,43,.07),rgba(224,138,149,.10))}
+.lsgrid tr.sel td{box-shadow:inset 0 0 0 9999px light-dark(rgba(52,199,89,.14),rgba(52,199,89,.18))}
+.lsgrid tr.miss input[data-f=p],.lsgrid tr.miss input[data-f=t]{background:var(--warn)}
+.lssum{margin-top:8px;font-size:13px;line-height:1.6}
+.lssum b{color:var(--acc)}
+.sheet .rhead td{font-weight:700;background:#f6f4f0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sheet tr.chg td.tp{font-weight:700}
+.sheet .lsnote{margin-top:6px;font-size:.92em;color:#1b1b1f;padding:6px 10px;border:1px solid #c9c4bb;border-radius:6px}
 .form ::placeholder{color:light-dark(#a9a6a0,#6c6b72);opacity:1}
 .cflist{display:flex;flex-direction:column;gap:8px;margin:4px 0 8px}
 .cfrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 44px;gap:8px;align-items:center}
@@ -364,11 +395,11 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
 </head>
 <body>
 <header class="top">
-  <h1>飯店單據<small>櫃檯作業工具・版本 1128-F</small></h1>
+  <h1>飯店單據<small>櫃檯作業工具・版本 1128-G</small></h1>
   <div class="seg" role="group" aria-label="單據類型" id="typeSeg">
     <button type="button" data-type="stay">住房明細<small>已入住・會計收據用</small></button>
-    <button type="button" data-type="quote">報價單<small>尚未訂房・詢價</small></button>
     <button type="button" data-type="book">訂房明細<small>傳真／電話／Email 訂房</small></button>
+    <button type="button" data-type="quote">報價單<small>尚未訂房・詢價</small></button>
   </div>
   <div class="seg" role="group" aria-label="單據語言" id="langSeg">
     <button type="button" data-lang="zh">中文版</button>
@@ -486,33 +517,47 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
         <div class="f"><label for="dOut">退房日期</label><input id="dOut" data-k="dOut" type="date"><label class="eye"><input type="checkbox" data-s="sCout">顯示</label></div>
       </div>
       <p class="hint" id="nightsHint"></p>
-      <div id="rooms"></div>
-      <button type="button" id="bAdd" style="width:100%">＋ 新增房型</button>
+      <div class="lsmode">
+        <button type="button" class="gsw" role="switch" id="lsSw" aria-checked="false" aria-label="長住模式"><span class="gtrack"><span class="gknob"></span></span></button>
+        <div><b>長住模式</b><span class="hint" style="display:block;margin:0">同一間房中途換房型、換房號或加人時使用，三種單據都可以用。</span></div>
+      </div>
+      <div id="lsBox" class="ls-only">
+        <div id="lsRooms"></div>
+        <button type="button" id="lsAddRoom" style="width:100%">＋ 新增房間（多訂一間房時才需要）</button>
+        <div class="showrow"><span class="lbl">住宿安排顯示：</span>
+          <label class="eye"><input type="checkbox" data-s="lsPax">人數</label>
+          <label class="eye"><input type="checkbox" data-s="lsDaily">每晚房價明細</label>
+        </div>
+        <datalist id="lsWhy"><option value="原房型客滿"><option value="加一人入住"><option value="減少一人"><option value="客人要求"></datalist>
+      </div>
+      <div id="rooms" class="nm-only"></div>
+      <button type="button" id="bAdd" class="nm-only" style="width:100%">＋ 新增房型</button>
       <div class="showrow"><span class="lbl">單據上顯示：</span>
         <label class="eye"><input type="checkbox" data-s="sNights">住宿晚數</label>
         <label class="eye"><input type="checkbox" data-s="sRooms">房間數</label>
         <label class="eye" data-only="stay book"><input type="checkbox" data-s="roomNo">入住房號</label>
       </div>
-      <div class="showrow"><span class="lbl">預訂房型表加上欄位：</span>
+      <div class="showrow nm-only"><span class="lbl">預訂房型表加上欄位：</span>
         <label class="eye"><input type="checkbox" data-s="cGuest">入住人姓名</label>
         <label class="eye"><input type="checkbox" data-s="cPax">人數</label>
       </div>
-      <div class="rcolsec"><span class="lbl">預訂房型表的自訂欄位（例：早餐、床型、加床）</span>
+      <div class="rcolsec nm-only"><span class="lbl">預訂房型表的自訂欄位（例：早餐、床型、加床）</span>
         <div id="rcols"></div>
         <button type="button" class="sm cfadd" id="rcAdd">＋ 新增房型表欄位</button>
       </div>
-      <p class="hint" style="margin-top:6px">勾選後，每個房型下方會多出可填寫的欄位。若一間房要列一位入住人，請每間房各新增一列（間數填 1）。</p>
+      <p class="hint nm-only" style="margin-top:6px">勾選後，每個房型下方會多出可填寫的欄位。若一間房要列一位入住人，請每間房各新增一列（間數填 1）。</p>
     </fieldset>
 
     <fieldset>
       <legend>② 每日房價（每間每晚）</legend>
-      <div class="qf">
+      <p class="hint ls-only" style="margin:0">長住模式下，每晚的房型與房價在「日期與房型」分頁的每晚表格中填寫。</p>
+      <div class="qf nm-only">
         <div><label class="lbl" for="qfP">快速填入金額</label><input id="qfP" type="number" min="0" inputmode="numeric" placeholder="例：4800"></div>
         <div><label class="lbl" for="qfR">房型</label><select id="qfR"></select></div>
         <div><label class="lbl" for="qfD">日期</label><select id="qfD"><option value="all">全部日期</option><option value="wd">只填週日～週四晚</option><option value="we">只填週五、六晚</option><option value="empty">只填空白格</option></select></div>
         <button type="button" class="pri" id="qfGo">填入</button>
       </div>
-      <div class="pg-wrap"><table class="pg" id="pg"><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
+      <div class="pg-wrap nm-only"><table class="pg" id="pg"><thead></thead><tbody></tbody><tfoot></tfoot></table></div>
       <p id="pgMsg"></p>
       <p class="hint" style="margin-top:8px">每格填一晚的價格。按 Enter 跳到下一晚；可從 Excel 或訂房系統整欄複製後，直接貼到第一格。灰底列為週五、六晚。</p>
     </fieldset>
@@ -678,7 +723,7 @@ const L={
    gName:'訂房姓名',gNameC:'聯絡人',gMobile:'訂房手機',gFax:'傳真',gEmail:'Email',
    h:{stay:'住宿資訊',quote:'詢價內容',book:'訂房內容'},iss:{stay:'開立日期',quote:'報價日期',book:'開立日期'},validTo:'有效期限至',
    cin:'入住日期',cout:'退房日期',ecin:'預計入住',ecout:'預計退房',nights:'住宿晚數',rooms:'房間數',src:'訂房來源',srcNo:'訂房編號',via:'訂房方式',pay:'付款狀態',valid:'報價有效至',staff:'承辦人員',
-   nN:n=>n+' 晚',rN:n=>n+' 間',roomsH:'預訂房型',rType:'房型',rNo:'入住房號',rGuest:'入住人',rPax:'人數',qty:'間數',nCol:'晚數',rSub:'房價小計',assign:'入住當日安排',tbd:'待報價',
+   nN:n=>n+' 晚',rN:n=>n+' 間',roomsH:'預訂房型',rType:'房型',rNo:'入住房號',lsH:'住宿安排',period:'期間',perN:'每晚房價',rSub2:'小計',why:'說明',roomN:i=>'第 '+i+' 間房',rGuest:'入住人',rPax:'人數',qty:'間數',nCol:'晚數',rSub:'房價小計',assign:'入住當日安排',tbd:'待報價',
    daily:'每日房價明細',date:'入住日期',per:'每間每晚',xq:q=>' × '+q+' 間',dayTot:'當日小計',rangeTot:'小計',nn:n=>'・'+n+' 晚',merged:'同價的連續日期已合併為一列。',total:'合計',
    legend:m=>'房價依入住日期計算，灰底為週五、週六晚'+(m?'；「合計」已乘上間數':'')+'。',
    exH:'其他費用',exItem:'項目',exPrice:'單價',exQty:'數量',exAmt:'金額',
@@ -689,7 +734,7 @@ const L={
    gName:'Guest Name',gNameC:'Contact',gMobile:'Mobile',gFax:'Fax',gEmail:'Email',
    h:{stay:'Stay Details',quote:'Quotation Details',book:'Reservation Details'},iss:{stay:'Date of Issue',quote:'Quotation Date',book:'Date of Issue'},validTo:'Valid until',
    cin:'Check-in',cout:'Check-out',ecin:'Check-in',ecout:'Check-out',nights:'Nights',rooms:'Rooms',src:'Booked via',srcNo:'Booking No.',via:'Booked via',pay:'Payment',valid:'Valid until',staff:'Handled by',
-   nN:n=>n+(n>1?' nights':' night'),rN:n=>n+(n>1?' rooms':' room'),roomsH:'Rooms',rType:'Room Type',rNo:'Room No.',rGuest:'Guest Name',rPax:'Guests',qty:'Qty',nCol:'Nights',rSub:'Room Charge',assign:'Assigned at check-in',tbd:'TBD',
+   nN:n=>n+(n>1?' nights':' night'),rN:n=>n+(n>1?' rooms':' room'),roomsH:'Rooms',rType:'Room Type',rNo:'Room No.',lsH:'Stay Schedule',period:'Period',perN:'Rate / Night',rSub2:'Subtotal',why:'Note',roomN:i=>'Room '+i,rGuest:'Guest Name',rPax:'Guests',qty:'Qty',nCol:'Nights',rSub:'Room Charge',assign:'Assigned at check-in',tbd:'TBD',
    daily:'Daily Room Rates',date:'Date',per:'per room / night',xq:q=>' × '+q+' rooms',dayTot:'Daily Total',rangeTot:'Subtotal',nn:n=>' · '+n+(n>1?' nights':' night'),merged:' Consecutive nights at the same rate are grouped.',total:'Total',
    legend:m=>'Rates vary by date. Shaded rows are Friday and Saturday nights'+(m?'; totals include the number of rooms':'')+'.',
    exH:'Additional Charges',exItem:'Item',exPrice:'Unit Price',exQty:'Qty',exAmt:'Amount',
@@ -697,12 +742,12 @@ const L={
    payMap:{'已於訂房網站預付':x=>'Prepaid via '+x,'已付清':'Paid in full','已付訂金':'Deposit paid','入住時付款':'Pay at check-in','未付款':'Unpaid'},
    viaMap:{'電話':'Telephone','傳真':'Fax','Email':'Email','現場':'Walk-in','LINE':'LINE'},other:'Other'}};
 const extra=()=>({noteEn:'',issued:today(),valid:'7',via:'電話',src:'Agoda',srcOther:'',srcNo:'',pay:'已於訂房網站預付',dep:'',hAddrEn:'',coName:'',coTax:'',coGuest:'',coTel:'',coFax:'',coAddr:''});
-const sDef=()=>({gName:1,gMobile:1,gFax:1,gEmail:1,roomNo:1,price:1,total:1,note:1,sign:1,stamp:0,hTelS:1,hFaxS:1,cGuest:0,cPax:0,extra:1,docInfo:1,priv:1,co:0,sCin:1,sCout:1,sNights:1,sRooms:1,sSrc:1,sSrcNo:1,sVia:1,sPay:1,sValid:1,sStaff:0,merge:0,compact:0,coAddr:1,coName:1,coTax:1,coGuest:1,coTel:1,coFax:1});
+const sDef=()=>({gName:1,gMobile:1,gFax:1,gEmail:1,roomNo:1,price:1,total:1,note:1,sign:1,stamp:0,hTelS:1,hFaxS:1,cGuest:0,cPax:0,extra:1,docInfo:1,lsPax:0,lsDaily:0,priv:1,co:0,sCin:1,sCout:1,sNights:1,sRooms:1,sSrc:1,sSrcNo:1,sVia:1,sPay:1,sValid:1,sStaff:0,merge:0,compact:0,coAddr:1,coName:1,coTax:1,coGuest:1,coTel:1,coFax:1});
 const uid=()=>Math.random().toString(36).slice(2,8);
 const clean=v=>String(v??'').replace(/[^\d.]/g,'');
 
 const sample=()=>({ /* 新電腦第一次打開：空白單據（備註在統一設定載入後填入標準文字） */
-  v:{...extra(),hStaff:'',gName:'',gMobile:'',gFax:'',gEmail:'',dIn:today(),dOut:addDay(today(),1),svc:'',disc:'',note:'',noteEn:'',gx:[],cx:[],dx:[],rcols:[],__fresh:1},
+  v:{...extra(),hStaff:'',gName:'',gMobile:'',gFax:'',gEmail:'',dIn:today(),dOut:addDay(today(),1),svc:'',disc:'',note:'',noteEn:'',gx:[],cx:[],dx:[],rcols:[],__fresh:1},ls:{on:0,rooms:[]},
   s:sDef(),rooms:[{id:uid(),type:'',en:'',no:'',qty:'1',p:{}}],extras:[],type:'stay',lang:'zh',foot:{},ver:5});
 
 let st;
@@ -716,7 +761,7 @@ st.s={...sDef(),...st.s};
 /* ---------- 多張單據（像 Excel 工作表分頁），只存在這台電腦 ---------- */
 const normSt=x=>{if(x.s&&x.s.cCx&&!x.v.rcols){const id='c1';x.v.rcols=[{id,h:x.v.cxH||'自訂欄位'}];(x.rooms||[]).forEach(r=>{r.cv={[id]:r.cx||''}})}
   if(x.s)delete x.s.cCx;x.v.svc='';['gx','cx','dx','rcols'].forEach(k=>{if(!Array.isArray(x.v[k]))x.v[k]=[]});
-  x.s={...sDef(),...x.s};x.s.stamp=0;x.extras=x.extras||[];return x};
+  x.s={...sDef(),...x.s};x.s.stamp=0;x.extras=x.extras||[];x.ls=x.ls||{on:0,rooms:[]};return x};
 let docs=null;try{docs=JSON.parse(localStorage.getItem('hotelQuoteDocs'))}catch(e){}
 if(!docs||!Array.isArray(docs.list)||!docs.list.length){const id=uid();docs={list:[{id,name:'',t:Date.now(),st}],cur:id}}
 const curDoc=()=>docs.list.find(d=>d.id===docs.cur)||docs.list[0];
@@ -802,7 +847,7 @@ const stampSz=()=>cfg.stampSizes[curHotel().id]||32;
 const saveCfg=()=>{try{localStorage.setItem('hotelQuoteCfg',JSON.stringify(cfg))}catch(e){}};
 const mapEn=zh=>{const k=String(zh||'').trim();if(!k)return'';const f=L=>(L||[]).find(x=>String(x.zh).trim()===k);const m=f(st&&st.hs&&st.hs.rt)||f(effRT());return m?m.en.trim():''};
 
-function nightList(){const a=st.v.dIn,b=st.v.dOut;if(!a||!b)return[];const out=[];for(let d=a,k=0;d<b&&k<90;d=addDay(d,1),k++)out.push(d);return out}
+function nightList(){const a=st.v.dIn,b=st.v.dOut;if(!a||!b)return[];const out=[];for(let d=a,k=0;d<b&&k<200;d=addDay(d,1),k++)out.push(d);return out}
 
 /* ---------- form: rooms ---------- */
 function renderRooms(){
@@ -857,8 +902,21 @@ function updateGridMeta(){
 function setPrice(i,d,val){const v=clean(val);if(v==='')delete st.rooms[i].p[d];else st.rooms[i].p[d]=v}
 
 /* ---------- calc ---------- */
+function calcLS(days){
+  const rooms=(st.ls.rooms||[]).map(r=>{const N=r.n||{};
+    const per=days.map(d=>{const e=N[d]||{};const t=String(e.t||'').trim(),hasP=e.p!==undefined&&e.p!==null&&String(e.p).trim()!=='';return{d,t,p:+e.p||0,no:String(e.no||'').trim(),x:String(e.x||'').trim(),w:String(e.w||'').trim(),has:!!t&&hasP}});
+    const cnt={};per.forEach(x=>{if(x.t)cnt[x.t]=(cnt[x.t]||0)+1});const main=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0]||'';
+    const segs=[];per.forEach(x=>{const k=[x.t,x.has?x.p:'?',x.no,st.s.lsPax?x.x:'',x.w].join('|'),L=segs[segs.length-1];
+      if(L&&L.k===k){L.b=x.d;L.n++}else segs.push({k,a:x.d,b:x.d,n:1,t:x.t,p:x.p,no:x.no,x:x.x,w:x.w,has:x.has})});
+    return{per,segs,main,sub:per.reduce((a,x)=>a+x.p,0),miss:per.filter(x=>!x.has).length}});
+  return rooms;
+}
 function calc(){
   const days=nightList();
+  if(st.ls&&st.ls.on){const ls=calcLS(days),sub=ls.reduce((a,r)=>a+r.sub,0);
+    const ex=(st.s.extra?st.extras:[]).filter(x=>x.name||x.en||+x.price).map(x=>({...x,p:+x.price||0,q:x.qty===''?1:(+x.qty||0)})).map(x=>({...x,amt:x.p*x.q}));
+    const exSum=ex.reduce((a,x)=>a+x.amt,0),disc=+st.v.disc||0;
+    return{days,n:days.length,lines:[],ls,sub,ex,exSum,svc:0,disc,total:Math.max(0,sub+exSum-disc),miss:ls.reduce((a,r)=>a+r.miss,0)}}
   const lines=st.rooms.map(r=>{const q=Math.max(0,+r.qty||0);
     const per=days.map(d=>({d,has:r.p[d]!==undefined&&r.p[d]!=='',p:+r.p[d]||0}));
     const sum1=per.reduce((a,x)=>a+x.p,0);
@@ -885,7 +943,7 @@ function render(sim){
   const baseT=l=>isAx(l)?String(l.type).replace(axTag,'').replace(/^[\s\-－–—（(]+|[\s\-－–—）)]+$/g,'').trim():l.type;
   const rName=l=>en?(l.en||mapEn(l.type)||mapEn(baseT(l))||baseT(l)):baseT(l);
   const rLabel=l=>esc(rName(l))+(isAx(l)&&!(en&&(l.en||mapEn(l.type)))?`<span class="rtag">${esc(en?(HH.annexTagEn||'Annex'):axTag)}</span>`:'');
-  const anyAx=c.lines.some(isAx), xName=x=>en?(x.en||x.name):x.name;
+  const anyAx=c.ls?c.ls.some(r=>r.per.some(x=>isAx({type:x.t}))):c.lines.some(isAx), xName=x=>en?(x.en||x.name):x.name;
   $('nightsHint').textContent=c.n?`共 ${c.n} 晚`:'請選擇入住與退房日期';
   const H=docHotel(),hasLogo=!!H.logo;
   const showAx=!!(AX&&AX.logo&&hasLogo&&(anyAx||H.annexLogo));
@@ -916,7 +974,7 @@ function render(sim){
   $('pGuestH').innerHTML=co?bi(t.contact,o.contact):bi(t.guest,o.guest);$('pGuest').innerHTML=g.join('');
   $('pGuestH').classList.toggle('hide',!g.length);$('pGuest').classList.toggle('hide',!g.length);
 
-  const rooms=c.lines.reduce((a,l)=>a+l.q,0);
+  const rooms=c.ls?c.ls.length:c.lines.reduce((a,l)=>a+l.q,0);
   const q=ty==='quote',srcName=v.src==='其他'?(v.srcOther||t.other):v.src;
   const pm=t.payMap[v.pay],payTxt=typeof pm==='function'?(ty==='book'?(en?'Prepaid':'已預付'):pm(srcName)):(pm||v.pay);
   const sf=[[s.sCin,q?t.ecin:t.cin,fD(v.dIn)],[s.sCout,q?t.ecout:t.cout,fD(v.dOut)],[s.sNights,t.nights,c.n?t.nN(c.n):''],[s.sRooms,t.rooms,rooms?t.rN(rooms):''],
@@ -946,6 +1004,40 @@ function render(sim){
       return `<tr class="${g.we?'we':''}"><td>${esc(lab)}</td>`+c.lines.map(l=>`<td class="n">${l.per[di].has?money(l.per[di].p):t.tbd}</td>`).join('')+(dayTot?`<td class="n">${anyMiss?'—':money(tt)}</td>`:'')+'</tr>'}).join('');
     const foot=showT?`<tr><td>${t.total}</td>`+c.lines.map(l=>`<td class="n">${l.miss?'—':money(l.sub)}</td>`).join('')+(dayTot?`<td class="n">${c.miss?'—':money(c.sub)}</td>`:'')+'</tr>':'';
     $('pDaily').innerHTML=`<div class="sec">${bi(t.daily,o.daily)}</div><table><thead>${head}</thead><tbody>${body}</tbody>${foot?`<tfoot>${foot}</tfoot>`:''}</table><div class="legend">${t.legend(multiQty)}${mg?t.merged:''}</div>`;
+  }
+
+  /* 長住模式：住宿安排 */
+  if(c.ls){
+    const fS2=x=>{const d=new Date(x+'T00:00');return en?d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' ('+d.toLocaleDateString('en-US',{weekday:'short'})+')':`${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}（${W[d.getDay()]}）`};
+    const nm=x=>en?(mapEn(x)||x):x;
+    const WHY={'原房型客滿':'Original room type fully booked','加一人入住':'One additional guest','減少一人':'One fewer guest','客人要求':'At guest\'s request'};
+    const wTxt=w=>en?(WHY[w]||w):w;
+    const multi=c.ls.length>1,anyW=c.ls.some(r=>r.segs.some(g=>g.w));
+    const cols=[[t.period,g=>esc(fS2(g.a)+(g.n>1?' – '+fS2(g.b):'')),''],[t.nCol,g=>g.n,'n'],[t.rType,g=>g.t?rLabel({type:g.t,en:''}):'—','tp'],
+      s.roomNo&&[t.rNo,g=>esc(g.no)||t.assign,''],s.lsPax&&[t.rPax,g=>esc(g.x)||'—','n'],
+      showT&&[t.perN,g=>g.has?money(g.p):t.tbd,'n'],showT&&[t.rSub2,g=>g.has?money(g.p*g.n):t.tbd,'n'],anyW&&[t.why,g=>esc(wTxt(g.w)),'']].filter(Boolean);
+    let h=`<div class="sec">${bi(t.lsH,o.lsH)}</div><table><thead><tr>${cols.map(([x,,k])=>`<th class="${k==='tp'?'':k}">${x}</th>`).join('')}</tr></thead><tbody>`;
+    const notes=[];
+    c.ls.forEach((r,ri)=>{
+      if(multi)h+=`<tr class="rhead"><td colspan="${cols.length}">${esc(t.roomN(ri+1))}</td></tr>`;
+      r.segs.forEach(g=>{h+=`<tr class="${g.t&&g.t!==r.main?'chg':''}">`+cols.map(([,f,k])=>`<td class="${k}">${f(g)}</td>`).join('')+'</tr>'});
+      const items=[];for(let i=1;i<r.segs.length;i++){const a=r.segs[i-1],b=r.segs[i];if(!b.t)continue;
+        if(b.t!==a.t){const back=b.t===r.segs[0].t;items.push(en?`${back?'back to':'to'} ${nm(b.t)} on ${fS2(b.a)}`:`${fS2(b.a)} ${back?'換回':'換房至'}${nm(b.t)}`)}
+        else if(b.no&&a.no&&b.no!==a.no)items.push(en?`to Room ${b.no} on ${fS2(b.a)}`:`${fS2(b.a)} 改住 ${b.no} 號房`)}
+      if(items.length)notes.push((multi?(en?t.roomN(ri+1)+' – ':t.roomN(ri+1)+'：'):'')+(en?'Room change: '+items.join('; ')+'.':'本次住宿期間將於 '+items.join('，')+'。'))});
+    const tn=c.ls.reduce((a,r)=>a+r.per.length,0);
+    const foot=showT?`<tfoot><tr>${cols.map(([x,,k],i)=>i===0?`<td>${t.total}</td>`:i===1?`<td class="n">${tn}</td>`:(x===t.rSub2?`<td class="n">${c.miss?t.tbd:money(c.sub)}</td>`:'<td></td>')).join('')}</tr></tfoot>`:'';
+    $('pRooms').innerHTML=h+'</tbody>'+foot+'</table>'+notes.map(x=>`<div class="lsnote">${esc(x)}</div>`).join('');
+    const showLD=showT&&s.lsDaily&&c.n;
+    $('pDaily').classList.toggle('hide',!showLD);
+    if(showLD){
+      const keyOf=di=>c.ls.map(r=>{const x=r.per[di];return x.t+'|'+(x.has?x.p:'?')}).join('/');
+      const gs=[];c.days.forEach((d,di)=>{const k=keyOf(di),L=gs[gs.length-1];if(s.merge&&L&&L.k===k){L.b=d;L.n++;L.we=L.we&&isWe(d)}else gs.push({k,a:d,b:d,n:1,i:di,we:isWe(d)})});
+      const head=`<tr><th>${t.date}</th>`+c.ls.map((r,ri)=>`<th class="n">${multi?esc(t.roomN(ri+1)):esc(t.perN)}</th>`).join('')+(multi?`<th class="n">${t.dayTot}</th>`:'')+'</tr>';
+      const body=gs.map(g=>{const di=g.i;const lab=g.n>1?`${fS2(g.a)} – ${fS2(g.b)}${t.nn(g.n)}`:fD(g.a);
+        return `<tr class="${g.we?'we':''}"><td>${esc(lab)}</td>`+c.ls.map(r=>{const x=r.per[di];return `<td class="n">${x.has?money(x.p):t.tbd}${x.t&&x.t!==r.main?`<small style="display:block;color:#6b6a70">${esc(nm(x.t))}</small>`:''}</td>`}).join('')+(multi?`<td class="n">${c.ls.some(r=>!r.per[di].has)?'—':money(c.ls.reduce((a,r)=>a+r.per[di].p,0)*g.n)}</td>`:'')+'</tr>'}).join('');
+      $('pDaily').innerHTML=`<div class="sec">${bi(t.daily,o.daily)}</div><table><thead>${head}</thead><tbody>${body}</tbody></table>`;
+    }
   }
 
   /* 其他費用 */
@@ -1079,7 +1171,7 @@ frm.addEventListener('input',e=>{
   const el=e.target;
   if(el.dataset.k){st.v[el.dataset.k]=el.value;if(el.dataset.k==='dIn'||el.dataset.k==='dOut'){
       if(el.dataset.k==='dIn'&&st.v.dIn&&(!st.v.dOut||st.v.dOut<=st.v.dIn)){st.v.dOut=addDay(st.v.dIn,1);$('dOut').value=st.v.dOut}
-      renderGrid()}}
+      renderGrid();renderLS()}}
   else if(el.dataset.gr!==undefined){setPrice(+el.dataset.gr,el.dataset.date,el.value);el.classList.toggle('empty',clean(el.value)==='');updateGridMeta()}
   else if(el.dataset.r!==undefined){const i=+el.dataset.r,rr=st.rooms[i];if(el.dataset.f==='type'&&rr.en&&rr.en===mapEn(rr.type)){rr.en='';const ei=$('re'+i);if(ei)ei.value=''}rr[el.dataset.f]=el.value;
     if(el.dataset.f==='type'){const h=$('gh'+i);if(h)h.textContent=el.value||'房型 '+(i+1);renderQF();updRoomEnPh()}}
@@ -1090,7 +1182,7 @@ frm.addEventListener('input',e=>{
   render();
 });
 function syncS(k){try{updSw()}catch(e){}document.querySelectorAll(`[data-s="${k}"]`).forEach(x=>{x.checked=!!st.s[k]});document.querySelectorAll(`[data-sinv="${k}"]`).forEach(x=>{x.checked=!st.s[k]})}
-frm.addEventListener('change',e=>{const d=e.target.dataset;if(d.s){st.s[d.s]=e.target.checked?1:0;syncS(d.s);if(/^c(Guest|Pax)$/.test(d.s)){renderRooms()}render()}else if(d.sinv){st.s[d.sinv]=e.target.checked?0:1;syncS(d.sinv);render()}});
+frm.addEventListener('change',e=>{const d=e.target.dataset;if(d.s){st.s[d.s]=e.target.checked?1:0;syncS(d.s);if(/^c(Guest|Pax)$/.test(d.s)){renderRooms()}if(d.s==='lsPax')renderLS();render()}else if(d.sinv){st.s[d.sinv]=e.target.checked?0:1;syncS(d.sinv);render()}});
 frm.addEventListener('submit',e=>e.preventDefault());
 
 const pg=$('pg');
@@ -1137,7 +1229,7 @@ const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('on');clearTi
 
 function blankFrom(src){const h=src.v;return{type:src.type,lang:src.lang,foot:src.foot,hid:cfg.cur,
   v:{...extra(),hStaff:h.hStaff,gName:'',gMobile:'',gFax:'',gEmail:'',dIn:today(),dOut:addDay(today(),1),disc:'',...stdNote(cfg.cur),gx:[],cx:[],dx:[],rcols:(h.rcols||[]).map(c=>({...c})),via:h.via,src:h.src,cxH:h.cxH},
-  s:sDef(),rooms:[{id:uid(),type:'',en:'',no:'',qty:'1',p:{}}],extras:[],ver:5}}
+  s:sDef(),rooms:[{id:uid(),type:'',en:'',no:'',qty:'1',p:{}}],extras:[],ls:{on:0,rooms:[]},ver:5}}
 function openDoc(id){save();docs.cur=id;st=normSt(curDoc().st);lastJ=JSON.stringify(st);
   if(st.hid&&cfg.hotels.some(h=>h.id===st.hid))cfg.cur=st.hid;else st.hid=cfg.cur;saveCfg();if(!st.hs)st.hs=snapHS();
   fillForm();render();renderDocBar();persistDocs();
@@ -1166,6 +1258,67 @@ $('bPrint').addEventListener('click',()=>{
   setTimeout(()=>{if(!c.miss)toast('若沒有出現列印視窗，請下載此 HTML 檔，用瀏覽器開啟後再列印')},600);
 });
 
+/* ---------- 長住模式：每間房一條時間線 ---------- */
+const lsSel={};let lsLast={};
+function applyLSMode(){const on=!!(st.ls&&st.ls.on);document.body.classList.toggle('ls-on',on);$('lsSw').setAttribute('aria-checked',on)}
+function lsRow(ri,d,di,r,main,pax){const e=(r.n||{})[d]||{};const has=String(e.t||'').trim()&&e.p!==undefined&&String(e.p).trim()!=='';
+  const sel=(lsSel[ri]||new Set()).has(d);
+  return `<tr class="${isWe(d)?'we':''} ${e.t&&e.t!==main?'chg':''} ${sel?'sel':''} ${has?'':'miss'}" data-lr="${ri}" data-d="${d}" data-di="${di}">
+    <td><input type="checkbox" data-lsck ${sel?'checked':''} aria-label="選取 ${fmtS(d)}"></td><td class="d">${fmtS(d)}</td>
+    <td><input data-lsn data-f="t" list="rtList" value="${esc(e.t||'')}" aria-label="房型"></td>
+    <td><input data-lsn data-f="no" value="${esc(e.no||'')}" style="width:64px" aria-label="房號"></td>
+    <td><input data-lsn data-f="p" type="number" min="0" inputmode="numeric" value="${esc(e.p??'')}" style="width:86px" aria-label="房價"></td>
+    ${pax?`<td><input data-lsn data-f="x" type="number" min="0" inputmode="numeric" value="${esc(e.x||'')}" style="width:52px" aria-label="人數"></td>`:''}
+    <td><input data-lsn data-f="w" list="lsWhy" value="${esc(e.w||'')}" aria-label="換房原因"></td></tr>`}
+function lsSummary(ri){const c=calc();if(!c.ls||!c.ls[ri])return'';const r=c.ls[ri];
+  const lines=r.segs.map(g=>`<div>・${fmtS(g.a)}${g.n>1?'～'+fmtS(g.b):''}　${g.n} 晚　${g.t?esc(g.t):'<b>未填房型</b>'}${g.no?'　'+esc(g.no)+' 號':''}　${g.has?'NT$ '+num(g.p)+'／晚':'<b>未填房價</b>'}${g.w?'　（'+esc(g.w)+'）':''}</div>`).join('');
+  return `系統整理：共 <b>${r.segs.length}</b> 段住宿${r.miss?`，還有 <b>${r.miss}</b> 晚未填完整`:''}${lines}`}
+function renderLS(){
+  if(!st.ls)st.ls={on:0,rooms:[]};const days=nightList(),pax=!!st.s.lsPax,multi=st.ls.rooms.length>1;
+  const c=calc();
+  $('lsRooms').innerHTML=st.ls.rooms.map((r,ri)=>{const main=(c.ls&&c.ls[ri])?c.ls[ri].main:'';const n=(lsSel[ri]||new Set()).size;
+    return `<div class="lsroom" data-room="${ri}">
+    <div class="lshead"><b>${multi?'第 '+(ri+1)+' 間房':'房間'}</b>${multi?`<button type="button" class="sm" data-lsrm="${ri}">移除這間房</button>`:''}</div>
+    <div class="lsstep"><span class="lbl">① 整段填入（先把全部日期填成主要房型）</span>
+      <div class="lsf${pax?' pax':''}" data-fill="${ri}"><input data-ff="t" list="rtList" placeholder="房型（例：標準雙人房）"><input data-ff="no" placeholder="房號"><input data-ff="p" type="number" min="0" inputmode="numeric" placeholder="每晚房價">${pax?'<input data-ff="x" type="number" min="0" placeholder="人數">':''}<button type="button" class="pri" data-lsgo="${ri}">填入全部日期</button></div></div>
+    <div class="lsstep"><span class="lbl">② 調整部分日期：在下表勾選日期（按住 Shift 可選一段），再填要改成的內容</span>
+      <div class="lsq"><button type="button" class="sm" data-lssel="we" data-room="${ri}">只選週五、六</button><button type="button" class="sm" data-lssel="all" data-room="${ri}">全選</button><button type="button" class="sm" data-lssel="none" data-room="${ri}">清除選取</button></div>
+      <div class="lsf b${pax?' pax':''}" data-bat="${ri}"><input data-bf="t" list="rtList" placeholder="改成房型"><input data-bf="no" placeholder="房號"><input data-bf="p" type="number" min="0" inputmode="numeric" placeholder="房價">${pax?'<input data-bf="x" type="number" min="0" placeholder="人數">':''}<input data-bf="w" list="lsWhy" placeholder="原因（例：原房型客滿）"><button type="button" class="pri" data-lsap="${ri}">套用到已選 ${n} 晚</button></div></div>
+    <div class="lsgrid-wrap"><table class="lsgrid"><colgroup><col class="ck"><col class="dt"><col class="ty"><col class="no"><col class="pr">${pax?'<col class="px">':''}<col class="wy"></colgroup><thead><tr><th></th><th>日期</th><th>房型</th><th>房號</th><th>房價</th>${pax?'<th>人數</th>':''}<th>換房原因</th></tr></thead><tbody>
+      ${days.length?days.map((d,di)=>lsRow(ri,d,di,r,main,pax)).join(''):`<tr><td colspan="7" style="padding:12px;color:var(--mute)">請先選擇入住與退房日期</td></tr>`}</tbody></table></div>
+    <div class="lssum" id="lssum${ri}">${lsSummary(ri)}</div></div>`}).join('');
+}
+function lsRefreshRoom(ri){const c=calc();const r=c.ls&&c.ls[ri];if(!r)return;
+  document.querySelectorAll(`#lsRooms tr[data-lr="${ri}"]`).forEach(tr=>{const x=r.per[+tr.dataset.di];tr.classList.toggle('chg',!!(x.t&&x.t!==r.main));tr.classList.toggle('miss',!x.has)});
+  const sm=$('lssum'+ri);if(sm)sm.innerHTML=lsSummary(ri)}
+function lsSelCount(ri){const b=document.querySelector(`[data-lsap="${ri}"]`);if(b)b.textContent=`套用到已選 ${(lsSel[ri]||new Set()).size} 晚`}
+$('lsSw').addEventListener('click',()=>{const b=$('lsSw');st.ls=st.ls||{on:0,rooms:[]};st.ls.on=st.ls.on?0:1;
+  if(st.ls.on&&!st.ls.rooms.length){const days=nightList();
+    st.ls.rooms=(st.rooms.filter(r=>r.type||Object.keys(r.p||{}).length).length?st.rooms:[{type:'',no:'',p:{}}]).map(r=>{const n={};days.forEach(d=>{if(r.type||r.p[d]!==undefined)n[d]={t:r.type||'',no:r.no||'',p:r.p&&r.p[d]!==undefined?r.p[d]:''}});return{id:uid(),n}})}
+  b.classList.add('moving');setTimeout(()=>b.classList.remove('moving'),180);
+  applyLSMode();renderLS();render();toast(st.ls.on?'已切換為長住模式':'已切換回一般模式（長住模式的內容會保留）')});
+$('lsAddRoom').addEventListener('click',()=>{st.ls.rooms.push({id:uid(),n:{}});renderLS();render();toast('已新增一間房，請用「整段填入」填寫')});
+$('lsBox').addEventListener('input',e=>{const el=e.target;if(el.dataset.lsn===undefined)return;e.stopPropagation();
+  const tr=el.closest('tr'),ri=+tr.dataset.lr,d=tr.dataset.d,r=st.ls.rooms[ri];r.n=r.n||{};r.n[d]=r.n[d]||{};r.n[d][el.dataset.f]=el.value;
+  lsRefreshRoom(ri);render()},true);
+$('lsBox').addEventListener('click',e=>{const el=e.target;
+  if(el.matches('[data-lsck]')){const tr=el.closest('tr'),ri=+tr.dataset.lr,di=+tr.dataset.di,S=lsSel[ri]=lsSel[ri]||new Set(),days=nightList();
+    if(e.shiftKey&&lsLast[ri]!==undefined){const [a,b]=[Math.min(lsLast[ri],di),Math.max(lsLast[ri],di)];for(let k=a;k<=b;k++){S.add(days[k])}
+      document.querySelectorAll(`#lsRooms tr[data-lr="${ri}"]`).forEach(t=>{const on=S.has(t.dataset.d);t.classList.toggle('sel',on);t.querySelector('[data-lsck]').checked=on})}
+    else{if(el.checked)S.add(tr.dataset.d);else S.delete(tr.dataset.d);tr.classList.toggle('sel',el.checked)}
+    lsLast[ri]=di;lsSelCount(ri);return}
+  const b=el.closest('button');if(!b)return;const d=b.dataset;
+  if(d.lssel){const ri=+d.room,S=lsSel[ri]=new Set();if(d.lssel==='all')nightList().forEach(x=>S.add(x));if(d.lssel==='we')nightList().filter(isWe).forEach(x=>S.add(x));
+    document.querySelectorAll(`#lsRooms tr[data-lr="${ri}"]`).forEach(t=>{const on=S.has(t.dataset.d);t.classList.toggle('sel',on);t.querySelector('[data-lsck]').checked=on});lsSelCount(ri);return}
+  if(d.lsgo!==undefined){const ri=+d.lsgo,box=document.querySelector(`[data-fill="${ri}"]`),g=k=>{const i=box.querySelector(`[data-ff="${k}"]`);return i?i.value.trim():''};
+    const v={t:g('t'),no:g('no'),p:g('p'),x:g('x')};if(!v.t&&!v.p){toast('請先填房型或房價');return}
+    const r=st.ls.rooms[ri];r.n=r.n||{};nightList().forEach(x=>{r.n[x]={t:v.t,no:v.no,p:v.p,x:v.x,w:''}});renderLS();render();toast('已填入全部日期，接著可以調整換房的日期');return}
+  if(d.lsap!==undefined){const ri=+d.lsap,S=lsSel[ri]||new Set();if(!S.size){toast('請先在表格中勾選要調整的日期');return}
+    const box=document.querySelector(`[data-bat="${ri}"]`),v={};box.querySelectorAll('[data-bf]').forEach(i=>{if(i.value.trim()!=='')v[i.dataset.bf]=i.value.trim()});
+    if(!Object.keys(v).length){toast('請填要改成的房型、房價或原因');return}
+    const r=st.ls.rooms[ri];r.n=r.n||{};S.forEach(x=>{r.n[x]={...(r.n[x]||{}),...v}});const k=S.size;lsSel[ri]=new Set();renderLS();render();toast(`已調整 ${k} 晚`);return}
+  if(d.lsrm!==undefined){if(b.dataset.arm!=='1'){b.dataset.arm='1';b.textContent='再按一次確認移除';setTimeout(()=>{if(b.isConnected){b.dataset.arm='';b.textContent='移除這間房'}},3000);return}
+    st.ls.rooms.splice(+d.lsrm,1);renderLS();render();toast('已移除這間房')}});
 const fk=()=>st.type+'_'+st.lang;
 function applyType(){
   const ty=st.type,lg=st.lang;
@@ -1347,7 +1500,7 @@ $('dSearch').addEventListener('input',renderDocList);
 function fillForm(){
   document.querySelectorAll('[data-k]').forEach(el=>{el.value=st.v[el.dataset.k]??''});
   document.querySelectorAll('[data-s]').forEach(el=>{el.checked=!!st.s[el.dataset.s]});document.querySelectorAll('[data-sinv]').forEach(el=>{el.checked=!st.s[el.dataset.sinv]});
-  renderRooms();renderExtras();renderGrid();applyType();renderRtMap();renderStamp();renderCF();renderHotels();
+  renderRooms();renderExtras();renderGrid();applyType();renderRtMap();renderStamp();renderCF();renderHotels();applyLSMode();renderLS();
 }
 {const hd=document.querySelector('header.top'),mq=matchMedia('(min-width:961px)');
   const setHH=()=>document.documentElement.style.setProperty('--hh',mq.matches?hd.offsetHeight+'px':'0px');
