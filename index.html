@@ -436,7 +436,7 @@ small.hn{display:block;font-size:10.5px;line-height:1.1;color:var(--mute);white-
 </head>
 <body>
 <header class="top">
-  <h1>飯店單據<small>櫃檯作業工具・版本 1128-H</small></h1>
+  <h1>飯店單據<small>櫃檯作業工具・版本 1128-I</small></h1>
   <div class="seg" role="group" aria-label="單據類型" id="typeSeg">
     <button type="button" data-type="stay">住房明細<small>已入住・會計收據用</small></button>
     <button type="button" data-type="book">訂房明細<small>傳真／電話／Email 訂房</small></button>
@@ -510,7 +510,7 @@ small.hn{display:block;font-size:10.5px;line-height:1.1;color:var(--mute);white-
               <div class="f"><label for="hAnnexTag">分館標籤（房型名稱含這幾個字即視為分館）</label><input id="hAnnexTag" data-h="annexTag" placeholder="快捷館"></div>
               <div class="f enOnly"><label for="hAnnexTagEn">英文標籤</label><input id="hAnnexTagEn" data-h="annexTagEn" placeholder="Express Wing"></div>
             </div>
-            <div class="f"><label for="hAnnexNote">分館入住說明（選填，有分館房型時顯示在住宿資訊）</label><input id="hAnnexNote" data-h="annexNote" placeholder="例：快捷館房型請至雙星大飯店一樓櫃檯辦理入住"></div>
+            <div class="f"><label for="hAnnexNote">分館入住說明（選填，有分館房型時顯示在住宿資訊）</label><input id="hAnnexNote" data-h="annexNote" placeholder="例：快捷館房型請至雙星大飯店一樓櫃檯辦理入住"><label class="eye"><input type="checkbox" data-s="sAnnex">顯示</label></div>
             <div class="f enOnly"><label for="hAnnexNoteEn">分館入住說明（英文）</label><input id="hAnnexNoteEn" data-h="annexNoteEn"></div>
             <label class="eye"><input type="checkbox" data-hc="annexLogo">抬頭一律加上分館 Logo（不勾選＝訂了分館房型才加上）</label>
           </div>
@@ -795,7 +795,7 @@ const L={
    payMap:{'已於訂房網站預付':x=>'Prepaid via '+x,'已付清':'Paid in full','已付訂金':'Deposit paid','入住時付款':'Pay at check-in','未付款':'Unpaid'},
    viaMap:{'電話':'Telephone','傳真':'Fax','Email':'Email','現場':'Walk-in','LINE':'LINE'},other:'Other'}};
 const extra=()=>({noteEn:'',issued:today(),valid:'7',via:'電話',src:'Agoda',srcOther:'',srcNo:'',pay:'已於訂房網站預付',dep:'',hAddrEn:'',coName:'',coTax:'',coGuest:'',coTel:'',coFax:'',coAddr:''});
-const sDef=()=>({gName:1,gMobile:1,gFax:1,gEmail:1,roomNo:1,price:1,total:1,note:1,sign:1,stamp:0,hTelS:1,hFaxS:1,cGuest:0,cPax:0,extra:1,docInfo:1,lsPax:0,lsDaily:0,priv:1,co:0,sCin:1,sCout:1,sNights:1,sRooms:1,sSrc:1,sSrcNo:1,sVia:1,sPay:1,sValid:1,sStaff:0,merge:0,compact:0,coAddr:1,coName:1,coTax:1,coGuest:1,coTel:1,coFax:1});
+const sDef=()=>({sAnnex:0,gName:1,gMobile:1,gFax:1,gEmail:1,roomNo:1,price:1,total:1,note:1,sign:1,stamp:0,hTelS:1,hFaxS:1,cGuest:0,cPax:0,extra:1,docInfo:1,lsPax:0,lsDaily:0,priv:1,co:0,sCin:1,sCout:1,sNights:1,sRooms:1,sSrc:1,sSrcNo:1,sVia:1,sPay:1,sValid:1,sStaff:0,merge:0,compact:0,coAddr:1,coName:1,coTax:1,coGuest:1,coTel:1,coFax:1});
 const uid=()=>Math.random().toString(36).slice(2,8);
 const clean=v=>String(v??'').replace(/[^\d.]/g,'');
 
@@ -835,7 +835,7 @@ const curHotel=()=>cfg.hotels.find(h=>h.id===cfg.cur)||cfg.hotels[0];
 if(!st.hid||!cfg.hotels.some(h=>h.id===st.hid))st.hid=cfg.cur;else cfg.cur=st.hid;
 /* ===== 統一設定：寫在程式裡，所有櫃檯電腦一致；有填值的欄位會鎖定，櫃檯不能改 =====
    要修改：改這裡的內容並把 ver 換成新的日期編號，上傳後各台電腦按 Ctrl+F5 即可 */
-const OFFICIAL={ver:'2026-11-28-2',
+const OFFICIAL={ver:'2026-11-28-3',
   hotels:{
     ent: {name:'企業家大飯店',en:'The Enterpriser Hotel',
           addr:'台中市東區和平街160號',addrEn:'No.160, Heping St., East Dist., Taichung City 401, Taiwan (R.O.C.)',
@@ -844,7 +844,7 @@ const OFFICIAL={ver:'2026-11-28-2',
           noteEn:'Check-in is from 3:00 PM, and check-out is by 12:00 noon (by 11:00 AM during long holiday weekends).\nA daily buffet breakfast is included, served from 7:00 AM to 9:30 AM.'},
     twin:{name:'雙星大飯店',en:'Twinstar Hotel',
           addr:'台中市東區復興路四段158號',addrEn:'No. 158, Sec. 4, Fuxing Rd., East Dist., Taichung City 401008, Taiwan (R.O.C.)',
-          tel:'04-2226-1811',fax:'04-2224-8346',annexNote:'',annexNoteEn:'',
+          tel:'04-2226-1811',fax:'04-2224-8346',annexNote:'快捷館房型請至雙星大飯店一樓櫃檯辦理入住。',annexNoteEn:'Guests staying in the Express Wing, please check in at the Twinstar Hotel front desk (1F).',
           note:'入住時間為下午 3:00 後，退房時間為中午 12:00 前（連續假期期間，退房時間提前至上午 11:00 前）。\n每日附贈自助式早餐，供餐時間為上午 7:00 至 9:30。',
           noteEn:'Check-in is from 3:00 PM, and check-out is by 12:00 noon (by 11:00 AM during long holiday weekends).\nA daily buffet breakfast is included, served from 7:00 AM to 9:30 AM.'},
     seh: {name:'台中車站快捷旅店',en:'Station Express Hotel Taichung',addr:'',addrEn:'',tel:'',fax:''}},
@@ -1032,7 +1032,7 @@ function render(sim){
   const pm=t.payMap[v.pay],payTxt=typeof pm==='function'?(ty==='book'?(en?'Prepaid':'已預付'):pm(srcName)):(pm||v.pay);
   const sf=[[s.sCin,q?t.ecin:t.cin,fD(v.dIn)],[s.sCout,q?t.ecout:t.cout,fD(v.dOut)],[s.sNights,t.nights,c.n?t.nN(c.n):''],[s.sRooms,t.rooms,rooms?t.rN(rooms):''],
     [s.docInfo&&s.sSrc&&ty==='stay',t.src,srcName],[s.docInfo&&s.sSrcNo&&ty==='stay',t.srcNo,v.srcNo],[s.docInfo&&s.sVia&&ty==='book',t.via,t.viaMap[v.via]||v.via],
-    [s.docInfo&&s.sPay&&ty!=='quote',t.pay,payTxt],[s.docInfo&&s.sValid&&q,t.valid,fD(validTo)],[anyAx&&(en?(HH.annexNoteEn||HH.annexNote):HH.annexNote),en?'Check-in at':'入住地點',en?(HH.annexNoteEn||HH.annexNote):HH.annexNote],[s.sStaff&&v.hStaff,t.staff,v.hStaff]].filter(x=>x[0]);
+    [s.docInfo&&s.sPay&&ty!=='quote',t.pay,payTxt],[s.docInfo&&s.sValid&&q,t.valid,fD(validTo)],[s.sAnnex&&anyAx&&(en?(HH.annexNoteEn||HH.annexNote):HH.annexNote),en?'Check-in at':'入住地點',en?(HH.annexNoteEn||HH.annexNote):HH.annexNote],[s.sStaff&&v.hStaff,t.staff,v.hStaff]].filter(x=>x[0]);
   $('pStay').innerHTML=sf.map(x=>kv(x[1],x[2])).join('')+(s.docInfo?cust(v.dx).join(''):'');
   $('pStayH').classList.toggle('hide',!$('pStay').innerHTML);$('pStay').classList.toggle('hide',!$('pStay').innerHTML);
 
