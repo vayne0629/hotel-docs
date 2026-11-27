@@ -34,7 +34,7 @@ button.sm{min-height:36px;font-size:13px;padding:0 10px}
 button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .wrap{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:24px;padding:24px max(2vw,16px);align-items:start} /* 左 40% 填寫、右 60% 文件 */
 /* 索引標籤：左側像活頁夾分隔頁的標籤，選中的那一張與內容框相連 */
-.form{display:grid;grid-template-columns:142px minmax(0,1fr);align-items:start;background:none;border:0;padding:0}
+.form{display:grid;grid-template-columns:214px minmax(0,1fr);align-items:start;background:none;border:0;padding:0}
 fieldset{border:0;border-bottom:1px solid var(--line);margin:0;padding:16px 0}
 fieldset:last-child{border:0}
 legend{font:700 16px "Noto Serif TC",serif;padding:0;margin-bottom:10px;color:var(--acc)}
@@ -128,6 +128,44 @@ textarea{min-height:72px;resize:vertical}
 .ex .enOnly,.room .enOnly{grid-column:1/-1}
 body:not(.en) .enOnly{display:none!important}
 #coBox.off,#privBox.off{display:none}
+/* ---------- 索引標籤上的開關列 ---------- */
+.trow{position:relative;display:flex}
+.trow>[role=tab]{flex:1}
+.trow.has-sw>[role=tab]{padding-right:82px}
+.trow .gsw{position:absolute;right:8px;top:50%;translate:0 -50%;z-index:4}
+.trow.off>[role=tab] .tl{opacity:.5}
+@media screen and (max-width:600px){.trow{flex:none}.trow.off>[role=tab]::after{display:none}}
+.trow.off>[role=tab]::after{content:"不印";position:absolute;right:82px;font-size:11px;font-weight:400;color:var(--mute)}
+
+/* ---------- 玻璃開關（Liquid Glass toggle，依 AIMRAN Library 參考程式改寫為純 CSS／JS） ----------
+   可調整：--lg-blur 模糊（4–40px，預設 20px）、--lg-a 玻璃透明度（0.04–0.40，預設 0.12）、--lg-shine 反光（0–0.6，預設 0.25） */
+.gsw{--lg-blur:20px;--lg-a:light-dark(.35,.12);--lg-shine:.25;
+  appearance:none;border:0;background:none;margin:0;padding:8px 0;min-width:64px;min-height:44px;display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",sans-serif;-webkit-font-smoothing:antialiased}
+.gtrack{position:relative;display:block;width:64px;height:28px;border-radius:999px;overflow:hidden;
+  background:rgba(255,255,255,var(--lg-a));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(180%);backdrop-filter:blur(var(--lg-blur)) saturate(180%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(255,255,255,.1),inset 0 0 20px rgba(255,255,255,.08),0 8px 32px rgba(0,0,0,.18);
+  transition:background-color .3s,transform .3s cubic-bezier(.3,1.25,.55,1)}
+.gsw[aria-checked=true] .gtrack{background:#34c759}
+/* 光線邊框 */
+.gtrack::before{content:"";position:absolute;inset:0;z-index:2;padding:1px;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.7),rgba(255,255,255,.05) 40%,rgba(255,255,255,.05) 60%,rgba(255,255,255,.4));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+/* 跟著游標移動的反光（--x／--y 由 JS 設定） */
+.gtrack::after{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;opacity:var(--lg-hover,0);transition:opacity .3s;
+  background:radial-gradient(circle 140px at var(--x,50%) var(--y,0%),rgba(255,255,255,var(--lg-shine)),transparent 70%)}
+.gsw:hover .gtrack{--lg-hover:1}
+/* 玻璃水滴：滑動時短暫拉長 */
+.gknob{position:absolute;left:2px;top:2px;z-index:3;display:block;width:24px;height:24px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff 0%,rgba(255,255,255,.92) 55%,rgba(240,240,245,.85) 100%);
+  box-shadow:0 3px 8px rgba(0,0,0,.18),inset 0 -1px 2px rgba(0,0,0,.06),inset 0 1px 1px #fff;
+  transform:translateX(var(--tx,0px)) scaleX(var(--sx,1));transform-origin:left center;transition:transform .32s cubic-bezier(.3,1.25,.55,1)}
+.gsw[aria-checked=true] .gknob{--tx:36px;transform-origin:right center}
+.gsw.moving .gknob{--sx:1.3}
+.gsw:active .gtrack{transform:scale(.95)}
+.gsw:focus-visible{outline:none}
+.gsw:focus-visible .gtrack{outline:2px solid var(--acc);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.gtrack,.gknob,.gtrack::after{transition:none}.gsw.moving .gknob{--sx:1}.gsw:active .gtrack{transform:none}}
 .hsbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;max-width:794px;margin:0 auto 10px;padding:10px 14px;border-radius:10px;font-size:14px;background:var(--warn);border:1px solid light-dark(#e8b56a,#7a5a2a)}
 .hsbar span{flex:1 1 260px}
 input.locked{background:light-dark(#f1efeb,#26262d);color:var(--mute);cursor:not-allowed;border-style:dashed}
@@ -236,13 +274,13 @@ body{padding-bottom:64px}
 #fitPanel .fixes button,#fitPanel .applied button{justify-content:space-between;display:flex;align-items:center;text-align:start;background:var(--panel);min-height:44px}
 #fitPanel small{font-weight:400;color:var(--mute);margin-inline-start:8px}
 .tabs{grid-column:1;grid-row:1/span 20;display:flex;flex-direction:column;gap:5px;padding-top:18px;position:sticky;top:calc(var(--hh) + 16px);z-index:2}
-.tabs button{position:relative;display:flex;align-items:center;gap:8px;text-align:start;min-height:50px;padding:6px 10px 6px 14px;font-size:14px;line-height:1.25;white-space:nowrap;
+.tabs [role=tab]{position:relative;display:flex;align-items:center;gap:8px;text-align:start;min-height:50px;padding:6px 10px 6px 14px;font-size:14px;line-height:1.25;white-space:nowrap;
   border:1px solid var(--line);border-right:0;border-radius:12px 0 0 12px;margin-right:-1px;
   background:light-dark(#e2ded7,#26262d);color:var(--mute);box-shadow:inset -6px 0 8px -6px rgba(0,0,0,.12);transition:background .15s,padding .15s}
-.tabs button:hover{background:light-dark(#ebe8e2,#2c2c34);color:var(--ink)}
-.tabs button .no{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:light-dark(#d2cdc4,#3a3a44);color:var(--mute)}
-.tabs button[aria-selected=true]{background:var(--panel);color:var(--ink);font-weight:700;box-shadow:inset 4px 0 0 var(--acc),-3px 3px 10px rgba(0,0,0,.06);padding-left:16px;z-index:3}
-.tabs button[aria-selected=true] .no{background:var(--acc);color:light-dark(#fff,#1b1b1f)}
+.tabs [role=tab]:hover{background:light-dark(#ebe8e2,#2c2c34);color:var(--ink)}
+.tabs [role=tab] .no{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:light-dark(#d2cdc4,#3a3a44);color:var(--mute)}
+.tabs [role=tab][aria-selected=true]{background:var(--panel);color:var(--ink);font-weight:700;box-shadow:inset 4px 0 0 var(--acc),-3px 3px 10px rgba(0,0,0,.06);padding-left:16px;z-index:3}
+.tabs [role=tab][aria-selected=true] .no{background:var(--acc);color:light-dark(#fff,#1b1b1f)}
 
 
 .tabs .dot{position:absolute;top:-6px;left:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:light-dark(#b86e00,#f0b45a);color:light-dark(#fff,#1b1b1f);font-size:11px;line-height:18px;font-weight:700;text-align:center}
@@ -256,8 +294,8 @@ body{padding-bottom:64px}
 .fit .linkish{border:0;background:none;color:var(--acc);text-decoration:underline;min-height:36px;padding:0 4px;font-size:13px}
 @media screen and (max-width:600px){.form{grid-template-columns:minmax(0,1fr)}
 .tabs{grid-row:1;flex-direction:row;overflow-x:auto;padding:0 2px;position:sticky;top:0;gap:4px;scrollbar-width:none}
-.tabs button{flex:none;min-height:46px;border:1px solid var(--line);border-bottom:0;border-radius:12px 12px 0 0;margin:0 0 -1px;padding:6px 12px;box-shadow:none}
-.tabs button[aria-selected=true]{box-shadow:inset 0 3px 0 var(--acc);padding-left:12px}
+.tabs [role=tab]{flex:none;min-height:46px;border:1px solid var(--line);border-bottom:0;border-radius:12px 12px 0 0;margin:0 0 -1px;padding:6px 12px;box-shadow:none}
+.tabs [role=tab][aria-selected=true]{box-shadow:inset 0 3px 0 var(--acc);padding-left:12px}
 .form fieldset{grid-column:1;border-radius:0 0 14px 14px;min-height:0}}
 .fitpill{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border-radius:20px;font-size:14px;border:1px solid var(--line);background:var(--panel);white-space:nowrap}
 .fitpill .bar{width:54px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
@@ -311,7 +349,7 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
 </head>
 <body>
 <header class="top">
-  <h1>飯店單據<small>櫃檯作業工具・版本 1128-B</small></h1>
+  <h1>飯店單據<small>櫃檯作業工具・版本 1128-C</small></h1>
   <div class="seg" role="group" aria-label="單據類型" id="typeSeg">
     <button type="button" data-type="stay">住房明細<small>已入住・會計收據用</small></button>
     <button type="button" data-type="quote">報價單<small>尚未訂房・詢價</small></button>
@@ -906,7 +944,7 @@ function render(sim){
   $('pSign').classList.toggle('has-stamp',useSt);
   if(useSt&&$('pStamp').getAttribute('src')!==stampOf())$('pStamp').src=stampOf();
   $('sheet').style.setProperty('--stw',stampSz()+'mm');$('sheet').style.setProperty('--lgh',(curHotel().logoH||17)+'mm');
-  $('hsBar').classList.toggle('hide',!hsStale());
+  $('hsBar').classList.toggle('hide',!hsStale());try{updSw()}catch(e){}
   $('pFoot').textContent=st.foot[ty+'_'+lg]??FOOT[lg][ty];
   $('depBox').style.visibility=v.pay==='已付訂金'?'visible':'hidden';
   $('srcOtherBox').classList.toggle('hide',ty!=='stay'||v.src!=='其他');
@@ -979,7 +1017,13 @@ panes.forEach((f,i)=>{f.id='pane'+i;f.setAttribute('role','tabpanel');
   const nav=document.createElement('div');nav.className='stepnav';
   nav.innerHTML=(i>0?`<button type="button" data-step="${i-1}">← ${TABS[i-1]}</button>`:'')+(i<panes.length-1?`<button type="button" data-step="${i+1}">下一步：${TABS[i+1]} →</button>`:'');
   f.append(nav)});
-$('tabs').innerHTML=TABS.map((t,i)=>`<button type="button" role="tab" id="tab${i}" aria-controls="pane${i}" data-tab="${i}"><span class="no">${i+1}</span><span class="tl">${t}</span></button>`).join('');
+const TAB_SW={1:['priv','客人資料'],2:['co','公司資料'],4:['price','金額（每日房價、小計、總價）'],6:['note','備註']};
+$('tabs').innerHTML=TABS.map((t,i)=>{const sw=TAB_SW[i];return `<div class="trow${sw?' has-sw':''}" data-row="${i}"><button type="button" role="tab" id="tab${i}" aria-controls="pane${i}" data-tab="${i}"><span class="no">${i+1}</span><span class="tl">${t}</span></button>${sw?`<button type="button" class="gsw" role="switch" aria-checked="true" data-sw="${sw[0]}" aria-label="在單據上顯示${sw[1]}" title="在單據上顯示${sw[1]}"><span class="gtrack"><span class="gknob"></span></span></button>`:''}</div>`}).join('');
+function updSw(){document.querySelectorAll('.gsw[data-sw]').forEach(b=>{const on=!!st.s[b.dataset.sw];b.setAttribute('aria-checked',on);b.closest('.trow').classList.toggle('off',!on)})}
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('.gsw');if(!b)return;e.stopPropagation();const k=b.dataset.sw;
+  st.s[k]=st.s[k]?0:1;syncS(k);b.classList.add('moving');setTimeout(()=>b.classList.remove('moving'),180);render();
+  toast((st.s[k]?'單據上顯示：':'單據上不顯示：')+b.title.replace('在單據上顯示',''))},true);
+$('tabs').addEventListener('pointermove',e=>{const b=e.target.closest('.gsw');if(!b)return;const t=b.querySelector('.gtrack'),r=t.getBoundingClientRect();t.style.setProperty('--x',(e.clientX-r.left)+'px');t.style.setProperty('--y',(e.clientY-r.top)+'px')});
 function setMV(m){document.body.classList.toggle('mv-form',m==='form');document.body.classList.toggle('mv-prev',m==='prev');
   document.querySelectorAll('[data-mv]').forEach(b=>b.setAttribute('aria-selected',b.dataset.mv===m));try{localStorage.setItem('hotelQuoteMV',m)}catch(e){}
   if(m==='prev')requestAnimationFrame(()=>{applyZoom();schedFit()})}
@@ -1017,7 +1061,7 @@ frm.addEventListener('input',e=>{
   else return;
   render();
 });
-function syncS(k){document.querySelectorAll(`[data-s="${k}"]`).forEach(x=>{x.checked=!!st.s[k]});document.querySelectorAll(`[data-sinv="${k}"]`).forEach(x=>{x.checked=!st.s[k]})}
+function syncS(k){try{updSw()}catch(e){}document.querySelectorAll(`[data-s="${k}"]`).forEach(x=>{x.checked=!!st.s[k]});document.querySelectorAll(`[data-sinv="${k}"]`).forEach(x=>{x.checked=!st.s[k]})}
 frm.addEventListener('change',e=>{const d=e.target.dataset;if(d.s){st.s[d.s]=e.target.checked?1:0;syncS(d.s);if(/^c(Guest|Pax|Cx)$/.test(d.s)){renderRooms();cxVis()}render()}else if(d.sinv){st.s[d.sinv]=e.target.checked?0:1;syncS(d.sinv);render()}});
 frm.addEventListener('submit',e=>e.preventDefault());
 
