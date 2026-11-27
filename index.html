@@ -38,8 +38,13 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 fieldset{border:0;border-bottom:1px solid var(--line);margin:0;padding:16px 0}
 fieldset:last-child{border:0}
 legend{font:700 16px "Noto Serif TC",serif;padding:0;margin-bottom:10px;color:var(--acc)}
-.f{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-items:end;margin-bottom:12px}
+.f{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:4px 10px;align-items:center;margin-bottom:12px}
 .f label{grid-column:1/-1;font-size:13px;color:var(--mute)}
+.f>label:not(.eye){grid-column:1;grid-row:1}
+.f>.eye{grid-column:2;grid-row:1;justify-self:start;min-height:30px;font-size:12px}
+.f>.eye input{width:16px;height:16px}
+.f>input,.f>select,.f>textarea{grid-column:1/-1;grid-row:2}
+.dim{opacity:.55}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:start}
 input,textarea,select{width:100%;font:16px "Noto Sans TC",sans-serif;padding:9px 11px;min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--field);color:var(--ink)}
 textarea{min-height:72px;resize:vertical}
@@ -91,6 +96,8 @@ textarea{min-height:72px;resize:vertical}
 .kv{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid #e6e3de}
 .kv b{font-weight:500;color:#6b6a70;flex:none;width:5.2em}
 .kv span{overflow-wrap:anywhere}
+.sec .bi,.ttl h2 .bi{font-family:"Noto Sans TC",sans-serif;font-weight:500;color:#8a898f;margin-inline-start:.55em;letter-spacing:.02em}
+.sec .bi{font-size:.72em}.ttl h2 .bi{font-size:.5em}
 .kv.wide{grid-column:1/-1}
 .sheet:lang(en) .kv b{width:6.8em}
 .sec{font:700 1.05em "Noto Serif TC",serif;margin:12px 0 4px;color:#1b1b1f}
@@ -356,7 +363,7 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
 </head>
 <body>
 <header class="top">
-  <h1>飯店單據<small>櫃檯作業工具・版本 1128-D</small></h1>
+  <h1>飯店單據<small>櫃檯作業工具・版本 1128-E</small></h1>
   <div class="seg" role="group" aria-label="單據類型" id="typeSeg">
     <button type="button" data-type="stay">住房明細<small>已入住・會計收據用</small></button>
     <button type="button" data-type="quote">報價單<small>尚未訂房・詢價</small></button>
@@ -445,8 +452,7 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
 
     <fieldset>
       <legend>客人資料（私人）</legend>
-      <label class="eye main"><input type="checkbox" data-s="priv">在單據上顯示私人資料</label>
-      <p class="hint" style="margin-top:4px">取消勾選各欄位旁的「顯示」，可單獨隱藏該欄位。</p>
+      <p class="hint" style="margin-top:0">整區要不要印，用左邊索引標籤上的開關；欄位名稱旁的「顯示」可單獨隱藏該欄位。</p>
       <div id="privBox">
       <div class="f"><label for="gName">訂房姓名</label><input id="gName" data-k="gName"><label class="eye"><input type="checkbox" data-s="gName" checked>顯示</label></div>
       <div class="f"><label for="gMobile">訂房手機</label><input id="gMobile" data-k="gMobile" inputmode="tel"><label class="eye"><input type="checkbox" data-s="gMobile" checked>顯示</label></div>
@@ -459,9 +465,8 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
 
     <fieldset>
       <legend>公司資料</legend>
-      <label class="eye main"><input type="checkbox" data-s="co">在單據上顯示公司資料</label>
       <div id="coBox">
-        <p class="hint" style="margin-top:4px">私人與公司資料可以只顯示其中一種，或兩種都顯示；兩種都顯示時，私人資料會改稱「聯絡人」。</p>
+        <p class="hint" style="margin-top:0">整區要不要印，用左邊索引標籤上的開關。私人與公司資料兩種都顯示時，私人資料會改稱「聯絡人」。</p>
         <div class="f"><label for="coName">公司名稱</label><input id="coName" data-k="coName"><label class="eye"><input type="checkbox" data-s="coName" checked>顯示</label></div>
         <div class="f"><label for="coTax">公司統編（國外稅號可含英文字母、符號，長度不限）</label><input id="coTax" data-k="coTax" placeholder="例：12345678、GB123456789、DE 123 456 789"><label class="eye"><input type="checkbox" data-s="coTax" checked>顯示</label></div>
         <div class="f"><label for="coGuest">入住人</label><input id="coGuest" data-k="coGuest" placeholder="多位可用頓號分隔"><label class="eye"><input type="checkbox" data-s="coGuest" checked>顯示</label></div>
@@ -500,7 +505,6 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
 
     <fieldset>
       <legend>② 每日房價（每間每晚）</legend>
-      <label class="eye main" style="margin-bottom:6px"><input type="checkbox" data-s="price">在單據上顯示金額（每日房價、房價小計、其他費用金額、總價）</label>
       <div class="qf">
         <div><label class="lbl" for="qfP">快速填入金額</label><input id="qfP" type="number" min="0" inputmode="numeric" placeholder="例：4800"></div>
         <div><label class="lbl" for="qfR">房型</label><select id="qfR"></select></div>
@@ -895,9 +899,10 @@ function render(sim){
   $('pHEn').textContent=en?(H.en?H.name:''):(H.en||'');
   $('pHCt').innerHTML=[en?(H.addrEn||H.addr):H.addr,st.s.hTelS!==0&&H.tel&&'TEL '+H.tel,st.s.hFaxS!==0&&H.fax&&'FAX '+H.fax].filter(Boolean).map(esc).join('<br>');
   const validTo=v.issued&&addDay(v.issued,Math.max(0,(+v.valid||7)-1));
-  $('pTitle').textContent=T[ty][lg];document.title=T[ty][lg];
+  const olg=en?'zh':'en',o=L[olg],bi=(a,b)=>`${esc(a)}<small class="bi">${esc(b)}</small>`;
+  $('pTitle').innerHTML=bi(T[ty][lg],T[ty][olg]);document.title=T[ty][lg];
   $('pNo').innerHTML=`${t.iss[ty]} ${esc(fD(v.issued))}`+(ty==='quote'?`<br>${t.validTo} ${esc(fD(validTo))}`:'');
-  $('pStayH').textContent=t.h[ty];
+  $('pStayH').innerHTML=bi(t.h[ty],o.h[ty]);
   $('sheet').lang=en?'en':'zh-Hant';
 
   const kv=(k,val)=>`<div class="kv"><b>${k}</b><span>${esc(val)||'—'}</span></div>`;
@@ -905,11 +910,11 @@ function render(sim){
   const cf=co?[['coName','coName'],['coTax','coTax'],['coGuest','coGuest'],['coTel','coTel'],['coFax','coFax'],['coAddr','coAddr']].filter(([k])=>s[k]&&(k!=='coAddr'||v.coAddr)).map(([k,l])=>k==='coAddr'?kv(t[l],v[k]).replace('class="kv"','class="kv wide"'):kv(t[l],v[k])):[];
   const cust=L=>(L||[]).filter(x=>String(x.l||'').trim()||String(x.v||'').trim()).map(x=>kv(esc(x.l||''),x.v));
   if(co)cf.push(...cust(v.cx));
-  $('pCoH').textContent=t.co;$('pCo').innerHTML=cf.join('');
+  $('pCoH').innerHTML=bi(t.co,o.co);$('pCo').innerHTML=cf.join('');
   $('pCoH').classList.toggle('hide',!cf.length);$('pCo').classList.toggle('hide',!cf.length);
   const g=pv?[['gName',co?'gNameC':'gName'],['gMobile','gMobile'],['gFax','gFax'],['gEmail','gEmail']].filter(([k])=>s[k]).map(([k,l])=>kv(t[l],v[k])):[];
   if(pv)g.push(...cust(v.gx));
-  $('pGuestH').textContent=co?t.contact:t.guest;$('pGuest').innerHTML=g.join('');
+  $('pGuestH').innerHTML=co?bi(t.contact,o.contact):bi(t.guest,o.guest);$('pGuest').innerHTML=g.join('');
   $('pGuestH').classList.toggle('hide',!g.length);$('pGuest').classList.toggle('hide',!g.length);
 
   const rooms=c.lines.reduce((a,l)=>a+l.q,0);
@@ -926,7 +931,7 @@ function render(sim){
   const rcs=(v.rcols||[]).map(col=>[esc(col.h||'自訂欄位'),l=>esc((l.cv||{})[col.id])||'—','']);
   const rc=[[t.rType,l=>rLabel(l)||'—',''],s.roomNo&&[t.rNo,l=>esc(l.no)||t.assign,''],s.cGuest&&[t.rGuest,l=>esc(l.guest)||'—',''],s.cPax&&[t.rPax,l=>esc(l.pax)||'—','n'],...rcs,
     [t.qty,l=>l.q,'n'],[t.nCol,()=>c.n,'n'],showT&&[t.rSub,l=>l.miss?t.tbd:money(l.sub),'n']].filter(Boolean);
-  $('pRooms').innerHTML=`<div class="sec">${t.roomsH}</div><table><thead><tr>${rc.map(([h,,k])=>`<th class="${k}">${h}</th>`).join('')}</tr></thead><tbody>`+
+  $('pRooms').innerHTML=`<div class="sec">${bi(t.roomsH,o.roomsH)}</div><table><thead><tr>${rc.map(([h,,k])=>`<th class="${k}">${h}</th>`).join('')}</tr></thead><tbody>`+
     c.lines.map(l=>'<tr>'+rc.map(([,f,k])=>`<td class="${k}">${f(l)}</td>`).join('')+'</tr>').join('')+'</tbody></table>';
 
   /* 每日房價表 */
@@ -941,12 +946,12 @@ function render(sim){
       const lab=g.n>1?`${fS(g.a)} – ${fS(g.b)}${t.nn(g.n)}`:(mg?fS(g.a)+t.nn(1):fD(g.a));
       return `<tr class="${g.we?'we':''}"><td>${esc(lab)}</td>`+c.lines.map(l=>`<td class="n">${l.per[di].has?money(l.per[di].p):t.tbd}</td>`).join('')+(dayTot?`<td class="n">${anyMiss?'—':money(tt)}</td>`:'')+'</tr>'}).join('');
     const foot=showT?`<tr><td>${t.total}</td>`+c.lines.map(l=>`<td class="n">${l.miss?'—':money(l.sub)}</td>`).join('')+(dayTot?`<td class="n">${c.miss?'—':money(c.sub)}</td>`:'')+'</tr>':'';
-    $('pDaily').innerHTML=`<div class="sec">${t.daily}</div><table><thead>${head}</thead><tbody>${body}</tbody>${foot?`<tfoot>${foot}</tfoot>`:''}</table><div class="legend">${t.legend(multiQty)}${mg?t.merged:''}</div>`;
+    $('pDaily').innerHTML=`<div class="sec">${bi(t.daily,o.daily)}</div><table><thead>${head}</thead><tbody>${body}</tbody>${foot?`<tfoot>${foot}</tfoot>`:''}</table><div class="legend">${t.legend(multiQty)}${mg?t.merged:''}</div>`;
   }
 
   /* 其他費用 */
   $('pExtra').classList.toggle('hide',!c.ex.length);
-  $('pExtra').innerHTML=c.ex.length?`<div class="sec">${t.exH}</div><table><thead><tr><th>${t.exItem}</th>${showT?`<th class="n">${t.exPrice}</th>`:''}<th class="n">${t.exQty}</th>${showT?`<th class="n">${t.exAmt}</th>`:''}</tr></thead><tbody>`+
+  $('pExtra').innerHTML=c.ex.length?`<div class="sec">${bi(t.exH,o.exH)}</div><table><thead><tr><th>${t.exItem}</th>${showT?`<th class="n">${t.exPrice}</th>`:''}<th class="n">${t.exQty}</th>${showT?`<th class="n">${t.exAmt}</th>`:''}</tr></thead><tbody>`+
     c.ex.map(x=>`<tr><td>${esc(xName(x))||'—'}</td>${showT?`<td class="n">${money(x.p)}</td>`:''}<td class="n">${x.q}</td>${showT?`<td class="n">${money(x.amt)}</td>`:''}</tr>`).join('')+'</tbody></table>':'';
 
   $('pSum').innerHTML=showT?[
@@ -972,8 +977,8 @@ function render(sim){
   $('pFoot').textContent=st.foot[ty+'_'+lg]??FOOT[lg][ty];
   $('depBox').style.visibility=v.pay==='已付訂金'?'visible':'hidden';
   $('srcOtherBox').classList.toggle('hide',ty!=='stay'||v.src!=='其他');
-  $('coBox').classList.toggle('off',!co);
-  $('privBox').classList.toggle('off',!pv);
+  $('coBox').classList.toggle('dim',!co);
+  $('privBox').classList.toggle('dim',!pv);
   if(sim)return;
   save();schedFit();if(typeof tabBadges==='function')try{tabBadges()}catch(e){}
 }
