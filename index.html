@@ -436,7 +436,7 @@ small.hn{display:block;font-size:10.5px;line-height:1.1;color:var(--mute);white-
 </head>
 <body>
 <header class="top">
-  <h1>飯店單據<small>櫃檯作業工具・版本 1128-I</small></h1>
+  <h1>飯店單據<small>櫃檯作業工具・版本 1128-J</small></h1>
   <div class="seg" role="group" aria-label="單據類型" id="typeSeg">
     <button type="button" data-type="stay">住房明細<small>已入住・會計收據用</small></button>
     <button type="button" data-type="book">訂房明細<small>傳真／電話／Email 訂房</small></button>
@@ -637,7 +637,7 @@ small.hn{display:block;font-size:10.5px;line-height:1.1;color:var(--mute);white-
       <legend>備註</legend>
       <div class="f"><label for="note">備註</label><textarea id="note" data-k="note" placeholder="例：入住時間為下午 3:00 後，退房時間為中午 12:00 前。"></textarea><label class="eye"><input type="checkbox" data-s="note">顯示</label></div>
       <div class="f enOnly"><label for="noteEn">英文備註（英文版用）</label><textarea id="noteEn" data-k="noteEn" placeholder="e.g. Check-in is from 3:00 PM, and check-out is by 12:00 noon."></textarea></div>
-      <div class="f"><label for="footTxt" id="lbFoot">單據底部說明文字</label><textarea id="footTxt" placeholder="例：茲證明上列旅客確已於上述期間入住本飯店，特此證明。"></textarea></div>
+      <div class="f"><label for="footTxt" id="lbFoot">單據底部說明文字</label><textarea id="footTxt" placeholder="例：此證明書僅供住宿證明，不得作為任何退款證明。"></textarea></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="sm" id="bStdNote">填入飯店標準備註</button><button type="button" class="sm" id="bFootReset">還原此單據的預設說明文字</button></div>
       <div class="showrow" style="margin-top:14px"><span class="lbl">單據上顯示：</span>
         <label class="eye"><input type="checkbox" data-s="sign">簽名欄</label>
@@ -763,12 +763,12 @@ const isWe=s=>{if(wd(s)===6)return true;const n=addDay(s,1);return holHas(s)&&ho
 const holName=s=>{if(!holHas(s)||!isOff(s))return'';let a=s,b=s,k=0;while(k++<14&&isOff(addDay(a,-1))&&holHas(addDay(a,-1)))a=addDay(a,-1);k=0;while(k++<14&&isOff(addDay(b,1))&&holHas(addDay(b,1)))b=addDay(b,1);
   if(a===b)return dayDesc(s);let bu='';for(let d=a;d<=b;d=addDay(d,1)){const x=dayDesc(d);if(x&&x!=='補假'&&x!=='彈性放假')return x;if(x)bu=x}return bu?'連續假期':''};
 const nightTag=s=>isWe(s)?holName(s):'';
-const T={stay:{zh:'住房明細',en:'Statement of Stay'},quote:{zh:'報價單',en:'Quotation'},book:{zh:'訂房明細',en:'Reservation Confirmation'}};
+const T={stay:{zh:'住房明細',en:'Proof of Accommodation'},quote:{zh:'報價單',en:'Quotation'},book:{zh:'訂房明細',en:'Reservation Confirmation'}};
 const FOOT={
-  zh:{stay:'茲證明上列旅客確已於上述期間入住本飯店，特此證明。\n如有任何問題，歡迎與櫃檯聯繫。',
+  zh:{stay:'此證明書僅供住宿證明，不得作為任何退款證明。\n如有任何問題，歡迎與櫃檯聯繫。',
       quote:'本報價單僅供參考，不代表已保留房間；實際房價與房況以完成訂房時為準。\n如需訂房，歡迎與櫃檯聯繫。',
       book:'您的訂房已成立，入住時請告知訂房姓名或出示本明細。\n如需更改或取消訂房，請儘早與櫃檯聯繫。'},
-  en:{stay:'This is to certify that the above-named guest(s) stayed at our hotel during the period stated above.\nFor any inquiries, please contact our front desk.',
+  en:{stay:'This statement is for reference only, and is NOT valid for any declaration of refund.\nFor any inquiries, please contact our front desk.',
       quote:'This quotation is for reference only and does not guarantee room availability. Final rates are subject to confirmation at the time of booking.\nTo make a reservation, please contact our front desk.',
       book:'Your reservation has been confirmed. Please present this confirmation or provide the booking name upon check-in.\nFor changes or cancellations, please contact our front desk as early as possible.'}};
 const L={
