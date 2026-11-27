@@ -436,7 +436,7 @@ small.hn{display:block;font-size:10.5px;line-height:1.1;color:var(--mute);white-
 </head>
 <body>
 <header class="top">
-  <h1>飯店單據<small>櫃檯作業工具・版本 1128-K</small></h1>
+  <h1>飯店單據<small>櫃檯作業工具・版本 1128-L</small></h1>
   <div class="seg" role="group" aria-label="單據類型" id="typeSeg">
     <button type="button" data-type="stay">住房明細<small>已入住・會計收據用</small></button>
     <button type="button" data-type="book">訂房明細<small>傳真／電話／Email 訂房</small></button>
@@ -766,11 +766,11 @@ const nightTag=s=>isWe(s)?holName(s):'';
 const T={stay:{zh:'住房明細',en:'Proof of Accommodation'},quote:{zh:'報價單',en:'Quotation'},book:{zh:'訂房明細',en:'Reservation Confirmation'}};
 const FOOT={
   zh:{stay:'此證明書僅供住宿證明，不得作為任何退款證明。\n如有任何問題，歡迎與飯店聯繫。',
-      quote:'本報價單僅供參考，不代表已保留房間；實際房價與房況以完成訂房時為準。\n如需訂房，歡迎與櫃檯聯繫。',
-      book:'您的訂房已成立，入住時請告知訂房姓名或出示本明細。\n如需更改或取消訂房，請儘早與櫃檯聯繫。'},
+      quote:'本報價單僅供參考，不代表已保留房間；實際房價與房況以完成訂房時為準。\n如需訂房，歡迎與飯店聯繫。',
+      book:'您的訂房已成立，入住時請告知訂房姓名或出示本明細。\n如需更改或取消訂房，請儘早與飯店聯繫。'},
   en:{stay:'This statement is for reference only, and is NOT valid for any declaration of refund.\nFor any inquiries, please contact the hotel.',
-      quote:'This quotation is for reference only and does not guarantee room availability. Final rates are subject to confirmation at the time of booking.\nTo make a reservation, please contact our front desk.',
-      book:'Your reservation has been confirmed. Please present this confirmation or provide the booking name upon check-in.\nFor changes or cancellations, please contact our front desk as early as possible.'}};
+      quote:'This quotation is for reference only and does not guarantee room availability. Final rates are subject to confirmation at the time of booking.\nTo make a reservation, please contact the hotel.',
+      book:'Your reservation has been confirmed. Please present this confirmation or provide the booking name upon check-in.\nFor changes or cancellations, please contact the hotel as early as possible.'}};
 const L={
  zh:{guest:'客人資料',contact:'聯絡人資料',co:'公司資料',coName:'公司名稱',coTax:'統一編號',coGuest:'入住人',coTel:'公司電話',coFax:'公司傳真',coAddr:'公司地址',
    gName:'訂房姓名',gNameC:'聯絡人',gMobile:'訂房手機',gFax:'傳真',gEmail:'Email',
@@ -783,7 +783,7 @@ const L={
    taxIn:'（含稅）',sRoom:'房價小計',sEx:'其他費用',sSvc:'服務費',sDisc:'折扣',sTot:'總價',sQTot:'報價總額',sDep:'已付訂金',sBal:'尚需支付',sign:'飯店簽章',
    payMap:{'已於訂房網站預付':x=>'已於 '+x+' 預付','已付清':'已付清','已付訂金':'已付訂金','入住時付款':'入住時付款','未付款':'未付款'},
    viaMap:{},other:'其他'},
- en:{guest:'Guest Information',contact:'Contact Person',co:'Company Information',coName:'Company',coTax:'Tax ID No.',coGuest:'Guest(s)',coTel:'Tel',coFax:'Fax',coAddr:'Address',
+ en:{guest:'Guest Information',contact:'Contact Information',co:'Company Information',coName:'Company',coTax:'Tax ID No.',coGuest:'Guest(s)',coTel:'Tel',coFax:'Fax',coAddr:'Address',
    gName:'Guest Name',gNameC:'Contact',gMobile:'Mobile',gFax:'Fax',gEmail:'Email',
    h:{stay:'Stay Details',quote:'Quotation Details',book:'Reservation Details'},iss:{stay:'Date of Issue',quote:'Quotation Date',book:'Date of Issue'},validTo:'Valid until',
    cin:'Check-in',cout:'Check-out',ecin:'Check-in',ecout:'Check-out',nights:'Nights',rooms:'Rooms',src:'Booked via',srcNo:'Booking No.',via:'Booked via',pay:'Payment',valid:'Valid until',staff:'Handled by',
