@@ -135,6 +135,7 @@ textarea{min-height:72px;resize:vertical}
 .ex .enOnly,.room .enOnly{grid-column:1/-1}
 body:not(.en) .enOnly{display:none!important}
 #coBox.off,#privBox.off{display:none}
+.form ::placeholder{color:light-dark(#a9a6a0,#6c6b72);opacity:1}
 .cflist{display:flex;flex-direction:column;gap:8px;margin:4px 0 8px}
 .cfrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 44px;gap:8px;align-items:center}
 .cfrow.one{grid-template-columns:minmax(0,1fr) 44px}
@@ -363,7 +364,7 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
 </head>
 <body>
 <header class="top">
-  <h1>飯店單據<small>櫃檯作業工具・版本 1128-E</small></h1>
+  <h1>飯店單據<small>櫃檯作業工具・版本 1128-F</small></h1>
   <div class="seg" role="group" aria-label="單據類型" id="typeSeg">
     <button type="button" data-type="stay">住房明細<small>已入住・會計收據用</small></button>
     <button type="button" data-type="quote">報價單<small>尚未訂房・詢價</small></button>
@@ -446,7 +447,7 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
       </div>
       <div class="two" style="margin-top:14px">
         <div class="f"><label for="issued" id="lbIssued">開立日期</label><input id="issued" data-k="issued" type="date"></div>
-        <div class="f"><label for="hStaff">承辦人員</label><input id="hStaff" data-k="hStaff"><label class="eye"><input type="checkbox" data-s="sStaff">顯示</label></div>
+        <div class="f"><label for="hStaff">承辦人員</label><input id="hStaff" data-k="hStaff" placeholder="例：櫃檯 林小姐"><label class="eye"><input type="checkbox" data-s="sStaff">顯示</label></div>
       </div>
     </fieldset>
 
@@ -454,10 +455,10 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
       <legend>客人資料（私人）</legend>
       <p class="hint" style="margin-top:0">整區要不要印，用左邊索引標籤上的開關；欄位名稱旁的「顯示」可單獨隱藏該欄位。</p>
       <div id="privBox">
-      <div class="f"><label for="gName">訂房姓名</label><input id="gName" data-k="gName"><label class="eye"><input type="checkbox" data-s="gName" checked>顯示</label></div>
-      <div class="f"><label for="gMobile">訂房手機</label><input id="gMobile" data-k="gMobile" inputmode="tel"><label class="eye"><input type="checkbox" data-s="gMobile" checked>顯示</label></div>
-      <div class="f"><label for="gFax">傳真</label><input id="gFax" data-k="gFax" inputmode="tel"><label class="eye"><input type="checkbox" data-s="gFax" checked>顯示</label></div>
-      <div class="f"><label for="gEmail">Email</label><input id="gEmail" data-k="gEmail" type="email"><label class="eye"><input type="checkbox" data-s="gEmail" checked>顯示</label></div>
+      <div class="f"><label for="gName">訂房姓名</label><input id="gName" data-k="gName" placeholder="例：王小明 先生"><label class="eye"><input type="checkbox" data-s="gName" checked>顯示</label></div>
+      <div class="f"><label for="gMobile">訂房手機</label><input id="gMobile" data-k="gMobile" inputmode="tel" placeholder="例：0912-345-678"><label class="eye"><input type="checkbox" data-s="gMobile" checked>顯示</label></div>
+      <div class="f"><label for="gFax">傳真</label><input id="gFax" data-k="gFax" inputmode="tel" placeholder="例：04-2222-3333"><label class="eye"><input type="checkbox" data-s="gFax" checked>顯示</label></div>
+      <div class="f"><label for="gEmail">Email</label><input id="gEmail" data-k="gEmail" type="email" placeholder="例：guest@example.com"><label class="eye"><input type="checkbox" data-s="gEmail" checked>顯示</label></div>
       <div class="cflist" id="cf_gx"></div>
       <button type="button" class="sm cfadd" data-cfadd="gx">＋ 新增自訂欄位</button>
       </div>
@@ -467,12 +468,12 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
       <legend>公司資料</legend>
       <div id="coBox">
         <p class="hint" style="margin-top:0">整區要不要印，用左邊索引標籤上的開關。私人與公司資料兩種都顯示時，私人資料會改稱「聯絡人」。</p>
-        <div class="f"><label for="coName">公司名稱</label><input id="coName" data-k="coName"><label class="eye"><input type="checkbox" data-s="coName" checked>顯示</label></div>
+        <div class="f"><label for="coName">公司名稱</label><input id="coName" data-k="coName" placeholder="例：○○股份有限公司"><label class="eye"><input type="checkbox" data-s="coName" checked>顯示</label></div>
         <div class="f"><label for="coTax">公司統編（國外稅號可含英文字母、符號，長度不限）</label><input id="coTax" data-k="coTax" placeholder="例：12345678、GB123456789、DE 123 456 789"><label class="eye"><input type="checkbox" data-s="coTax" checked>顯示</label></div>
-        <div class="f"><label for="coGuest">入住人</label><input id="coGuest" data-k="coGuest" placeholder="多位可用頓號分隔"><label class="eye"><input type="checkbox" data-s="coGuest" checked>顯示</label></div>
-        <div class="f"><label for="coTel">公司電話</label><input id="coTel" data-k="coTel" inputmode="tel"><label class="eye"><input type="checkbox" data-s="coTel" checked>顯示</label></div>
-        <div class="f"><label for="coFax">公司傳真</label><input id="coFax" data-k="coFax" inputmode="tel"><label class="eye"><input type="checkbox" data-s="coFax" checked>顯示</label></div>
-        <div class="f"><label for="coAddr">公司地址</label><input id="coAddr" data-k="coAddr"><label class="eye"><input type="checkbox" data-s="coAddr" checked>顯示</label></div>
+        <div class="f"><label for="coGuest">入住人</label><input id="coGuest" data-k="coGuest" placeholder="例：王小明、陳小華（多位用頓號分隔）"><label class="eye"><input type="checkbox" data-s="coGuest" checked>顯示</label></div>
+        <div class="f"><label for="coTel">公司電話</label><input id="coTel" data-k="coTel" inputmode="tel" placeholder="例：02-2700-1234"><label class="eye"><input type="checkbox" data-s="coTel" checked>顯示</label></div>
+        <div class="f"><label for="coFax">公司傳真</label><input id="coFax" data-k="coFax" inputmode="tel" placeholder="例：02-2700-5678"><label class="eye"><input type="checkbox" data-s="coFax" checked>顯示</label></div>
+        <div class="f"><label for="coAddr">公司地址</label><input id="coAddr" data-k="coAddr" placeholder="例：台北市信義區信義路五段 7 號"><label class="eye"><input type="checkbox" data-s="coAddr" checked>顯示</label></div>
         <div class="cflist" id="cf_cx"></div>
       <button type="button" class="sm cfadd" data-cfadd="cx">＋ 新增自訂欄位</button>
       </div>
@@ -519,17 +520,17 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
     <fieldset>
       <legend id="lgDoc">單據資訊</legend>
       <div class="two">
-        <div class="f" data-only="quote"><label for="valid">報價有效天數</label><input id="valid" data-k="valid" type="number" min="1" inputmode="numeric"><label class="eye"><input type="checkbox" data-s="sValid">顯示</label></div>
+        <div class="f" data-only="quote"><label for="valid">報價有效天數</label><input id="valid" data-k="valid" type="number" min="1" inputmode="numeric" placeholder="例：7"><label class="eye"><input type="checkbox" data-s="sValid">顯示</label></div>
         <div class="f" data-only="book"><label for="via">訂房方式</label><select id="via" data-k="via"><option>電話</option><option>傳真</option><option>Email</option><option>現場</option><option>LINE</option></select><label class="eye"><input type="checkbox" data-s="sVia">顯示</label></div>
       </div>
       <div class="two" data-only="stay">
         <div class="f"><label for="src">訂房來源</label><select id="src" data-k="src"><option>Agoda</option><option>Booking.com</option><option>Expedia</option><option>Trip.com</option><option>Hotels.com</option><option>其他</option></select><label class="eye"><input type="checkbox" data-s="sSrc">顯示</label></div>
         <div class="f"><label for="srcNo">訂房編號</label><input id="srcNo" data-k="srcNo" placeholder="訂房網站確認編號"><label class="eye"><input type="checkbox" data-s="sSrcNo">顯示</label></div>
       </div>
-      <div class="f" data-only="stay" id="srcOtherBox"><label for="srcOther">其他訂房來源名稱</label><input id="srcOther" data-k="srcOther"></div>
+      <div class="f" data-only="stay" id="srcOtherBox"><label for="srcOther">其他訂房來源名稱</label><input id="srcOther" data-k="srcOther" placeholder="例：易遊網"></div>
       <div class="two" data-only="stay book">
         <div class="f"><label for="pay">付款狀態</label><select id="pay" data-k="pay"><option>已於訂房網站預付</option><option>已付清</option><option>已付訂金</option><option>入住時付款</option><option>未付款</option></select><label class="eye"><input type="checkbox" data-s="sPay">顯示</label></div>
-        <div class="f" id="depBox"><label for="dep">已付金額（元）</label><input id="dep" data-k="dep" type="number" min="0" inputmode="numeric"></div>
+        <div class="f" id="depBox"><label for="dep">已付金額（元）</label><input id="dep" data-k="dep" type="number" min="0" inputmode="numeric" placeholder="例：2000"></div>
       </div>
       <div class="cflist" id="cf_dx"></div>
       <button type="button" class="sm cfadd" data-cfadd="dx">＋ 新增自訂欄位</button>
@@ -541,15 +542,15 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
       <div class="chips"><span class="lbl" style="display:inline">常用：</span><button type="button" class="sm" data-chip="加床|Extra Bed">加床</button><button type="button" class="sm" data-chip="早餐|Breakfast">早餐</button><button type="button" class="sm" data-chip="停車費|Parking">停車費</button><button type="button" class="sm" data-chip="洗衣費|Laundry">洗衣費</button><button type="button" class="sm" data-chip="延遲退房|Late Check-out">延遲退房</button></div>
       <button type="button" id="bExtra" style="width:100%;margin:8px 0 14px">＋ 新增其他費用項目</button>
       <div class="two">
-        <div class="f"><label for="disc">折扣金額（元）</label><input id="disc" data-k="disc" type="number" min="0" step="1"></div>
+        <div class="f"><label for="disc">折扣金額（元）</label><input id="disc" data-k="disc" type="number" min="0" step="1" placeholder="例：500（沒有折扣請留空）"></div>
       </div>
     </fieldset>
 
     <fieldset>
       <legend>備註</legend>
-      <div class="f"><label for="note">備註</label><textarea id="note" data-k="note"></textarea><label class="eye"><input type="checkbox" data-s="note">顯示</label></div>
-      <div class="f enOnly"><label for="noteEn">英文備註（英文版用）</label><textarea id="noteEn" data-k="noteEn"></textarea></div>
-      <div class="f"><label for="footTxt" id="lbFoot">單據底部說明文字</label><textarea id="footTxt"></textarea></div>
+      <div class="f"><label for="note">備註</label><textarea id="note" data-k="note" placeholder="例：入住時間為下午 3:00 後，退房時間為中午 12:00 前。"></textarea><label class="eye"><input type="checkbox" data-s="note">顯示</label></div>
+      <div class="f enOnly"><label for="noteEn">英文備註（英文版用）</label><textarea id="noteEn" data-k="noteEn" placeholder="e.g. Check-in is from 3:00 PM, and check-out is by 12:00 noon."></textarea></div>
+      <div class="f"><label for="footTxt" id="lbFoot">單據底部說明文字</label><textarea id="footTxt" placeholder="例：茲證明上列旅客確已於上述期間入住本飯店，特此證明。"></textarea></div>
       <button type="button" class="sm" id="bFootReset">還原此單據的預設說明文字</button>
       <div class="showrow" style="margin-top:14px"><span class="lbl">單據上顯示：</span>
         <label class="eye"><input type="checkbox" data-s="sign">簽名欄</label>
@@ -696,21 +697,13 @@ const L={
    payMap:{'已於訂房網站預付':x=>'Prepaid via '+x,'已付清':'Paid in full','已付訂金':'Deposit paid','入住時付款':'Pay at check-in','未付款':'Unpaid'},
    viaMap:{'電話':'Telephone','傳真':'Fax','Email':'Email','現場':'Walk-in','LINE':'LINE'},other:'Other'}};
 const extra=()=>({noteEn:'',issued:today(),valid:'7',via:'電話',src:'Agoda',srcOther:'',srcNo:'',pay:'已於訂房網站預付',dep:'',hAddrEn:'',coName:'',coTax:'',coGuest:'',coTel:'',coFax:'',coAddr:''});
-const sDef=()=>({gName:1,gMobile:1,gFax:1,gEmail:1,roomNo:1,price:1,total:1,note:1,sign:1,stamp:0,hTelS:1,hFaxS:1,cGuest:0,cPax:0,extra:1,docInfo:1,priv:1,co:0,sCin:1,sCout:1,sNights:1,sRooms:1,sSrc:1,sSrcNo:1,sVia:1,sPay:1,sValid:1,sStaff:1,merge:0,compact:0,coAddr:1,coName:1,coTax:1,coGuest:1,coTel:1,coFax:1});
+const sDef=()=>({gName:1,gMobile:1,gFax:1,gEmail:1,roomNo:1,price:1,total:1,note:1,sign:1,stamp:0,hTelS:1,hFaxS:1,cGuest:0,cPax:0,extra:1,docInfo:1,priv:1,co:0,sCin:1,sCout:1,sNights:1,sRooms:1,sSrc:1,sSrcNo:1,sVia:1,sPay:1,sValid:1,sStaff:0,merge:0,compact:0,coAddr:1,coName:1,coTax:1,coGuest:1,coTel:1,coFax:1});
 const uid=()=>Math.random().toString(36).slice(2,8);
 const clean=v=>String(v??'').replace(/[^\d.]/g,'');
 
-const sample=()=>{
-  const dIn=addDay(today(),6);
-  const a=[4800,5600,6200,4500],b=[6800,7600,8200,6500];
-  const r1={id:uid(),type:'高級雙人房',en:'',no:'1208',qty:'1',p:{}},r2={id:uid(),type:'豪華家庭房',en:'',no:'1210',qty:'1',p:{}};
-  a.forEach((v,i)=>r1.p[addDay(dIn,i)]=String(v));b.forEach((v,i)=>r2.p[addDay(dIn,i)]=String(v));
-  return{v:{hName:'晴光大飯店',hEn:'SUNLIT GRAND HOTEL',hAddr:'台北市中山區南京東路二段 88 號',hTel:'02-2567-8888',hStaff:'櫃檯 林小姐',
-     gName:'王大明 先生',gMobile:'0912-345-678',gFax:'02-2345-6789',gEmail:'daming.wang@example.com',
-     dIn,dOut:addDay(dIn,4),svc:'',disc:'',note:'入住時間 15:00 後，退房時間 11:00 前。\n含每日雙人自助早餐。',...extra(),srcNo:'1234567890',
-     noteEn:'Check-in after 15:00; check-out by 11:00.\nDaily buffet breakfast for two included.',hAddrEn:'No. 88, Sec. 2, Nanjing E. Rd., Zhongshan Dist., Taipei City',coName:'光明科技股份有限公司',coTax:'12345678',coGuest:'王大明、陳小華',coTel:'02-2700-1234',coFax:'02-2700-5678'},
-  s:sDef(),rooms:[r1,r2],extras:[{name:'加床',en:'Extra Bed',price:'800',qty:'2'}],type:'stay',lang:'zh',foot:{},ver:5};
-};
+const sample=()=>({ /* 新電腦第一次打開：空白單據（備註在統一設定載入後填入標準文字） */
+  v:{...extra(),hStaff:'',gName:'',gMobile:'',gFax:'',gEmail:'',dIn:today(),dOut:addDay(today(),1),svc:'',disc:'',note:'',noteEn:'',gx:[],cx:[],dx:[],rcols:[],__fresh:1},
+  s:sDef(),rooms:[{id:uid(),type:'',en:'',no:'',qty:'1',p:{}}],extras:[],type:'stay',lang:'zh',foot:{},ver:5});
 
 let st;
 try{st=JSON.parse(localStorage.getItem('hotelQuote'))}catch(e){}
@@ -748,10 +741,14 @@ const OFFICIAL={ver:'2026-11-28-2',
   hotels:{
     ent: {name:'企業家大飯店',en:'The Enterpriser Hotel',
           addr:'台中市東區和平街160號',addrEn:'No.160, Heping St., East Dist., Taichung City 401, Taiwan (R.O.C.)',
-          tel:'04-2220-7733',fax:'04-2221-7540'},
+          tel:'04-2220-7733',fax:'04-2221-7540',
+          note:'入住時間為下午 3:00 後，退房時間為中午 12:00 前（連續假期期間，退房時間提前至上午 11:00 前）。\n每日附贈自助式早餐，供餐時間為上午 7:00 至 9:30。',
+          noteEn:'Check-in is from 3:00 PM, and check-out is by 12:00 noon (by 11:00 AM during long holiday weekends).\nA daily buffet breakfast is included, served from 7:00 AM to 9:30 AM.'},
     twin:{name:'雙星大飯店',en:'Twinstar Hotel',
           addr:'台中市東區復興路四段158號',addrEn:'No. 158, Sec. 4, Fuxing Rd., East Dist., Taichung City 401008, Taiwan (R.O.C.)',
-          tel:'04-2226-1811',fax:'04-2224-8346',annexNote:'',annexNoteEn:''},
+          tel:'04-2226-1811',fax:'04-2224-8346',annexNote:'',annexNoteEn:'',
+          note:'入住時間為下午 3:00 後，退房時間為中午 12:00 前（連續假期期間，退房時間提前至上午 11:00 前）。\n每日附贈自助式早餐，供餐時間為上午 7:00 至 9:30。',
+          noteEn:'Check-in is from 3:00 PM, and check-out is by 12:00 noon (by 11:00 AM during long holiday weekends).\nA daily buffet breakfast is included, served from 7:00 AM to 9:30 AM.'},
     seh: {name:'台中車站快捷旅店',en:'Station Express Hotel Taichung',addr:'',addrEn:'',tel:'',fax:''}},
   /* 各飯店的房型中英對照 */
   rtBy:{
@@ -794,6 +791,8 @@ const hsStale=()=>{const hs=st.hs;if(!hs||hs.hid!==curHotel().id)return false;co
   const f=(L,z)=>{const m=(L||[]).find(x=>String(x.zh).trim()===String(z||'').trim());return m?m.en:null};
   return st.rooms.some(r=>{const a=f(hs.rt,r.type),b=f(effRT(),r.type);return a!==null&&b!==null&&a!==b})};
 if(!st.hs)st.hs=snapHS();
+const stdNote=hid=>{const o=OFFICIAL.hotels[hid]||{};return{note:o.note||'',noteEn:o.noteEn||''}};
+if(st.v.__fresh){Object.assign(st.v,stdNote(cfg.cur));delete st.v.__fresh}
 const annexOf=H=>H&&H.annex?cfg.hotels.find(h=>h.id===H.annex&&h.id!==H.id):null;
 /* 發票章：每家飯店各一個，只存在這台電腦的瀏覽器（localStorage） */
 if(cfg.stamp!==undefined||cfg.stampSize!==undefined){delete cfg.stamp;delete cfg.stampSize} /* 舊版不分飯店的印章作廢，需重新選取 */
@@ -826,7 +825,7 @@ function renderExtras(){
   $('extras').innerHTML=st.extras.map((x,i)=>`
   <div class="ex">
     <div><label class="lbl" for="xn${i}">費用項目</label><input id="xn${i}" data-x="${i}" data-f="name" value="${esc(x.name)}" placeholder="例：加床"></div>
-    <div><label class="lbl" for="xp${i}">單價（元）</label><input id="xp${i}" data-x="${i}" data-f="price" type="number" min="0" inputmode="numeric" value="${esc(x.price)}"></div>
+    <div><label class="lbl" for="xp${i}">單價（元）</label><input id="xp${i}" data-x="${i}" data-f="price" type="number" min="0" inputmode="numeric" value="${esc(x.price)}" placeholder="例：800"></div>
     <div><label class="lbl" for="xq${i}">數量</label><input id="xq${i}" data-x="${i}" data-f="qty" type="number" min="1" inputmode="numeric" value="${esc(x.qty)}"></div>
     <button type="button" class="x" data-xrm="${i}" aria-label="移除費用 ${i+1}">✕</button>
     <div class="enOnly"><label class="lbl" for="xe${i}">英文項目名稱（英文版用）</label><input id="xe${i}" data-x="${i}" data-f="en" value="${esc(x.en)}"></div>
@@ -1137,7 +1136,7 @@ $('extras').addEventListener('click',e=>{const i=e.target.closest('[data-xrm]')?
 const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2400)};
 
 function blankFrom(src){const h=src.v;return{type:src.type,lang:src.lang,foot:src.foot,hid:cfg.cur,
-  v:{...extra(),hStaff:h.hStaff,gName:'',gMobile:'',gFax:'',gEmail:'',dIn:today(),dOut:addDay(today(),1),disc:'',gx:[],cx:[],dx:[],rcols:(h.rcols||[]).map(c=>({...c})),note:h.note,noteEn:h.noteEn,via:h.via,src:h.src,cxH:h.cxH},
+  v:{...extra(),hStaff:h.hStaff,gName:'',gMobile:'',gFax:'',gEmail:'',dIn:today(),dOut:addDay(today(),1),disc:'',...stdNote(cfg.cur),gx:[],cx:[],dx:[],rcols:(h.rcols||[]).map(c=>({...c})),via:h.via,src:h.src,cxH:h.cxH},
   s:sDef(),rooms:[{id:uid(),type:'',en:'',no:'',qty:'1',p:{}}],extras:[],ver:5}}
 function openDoc(id){save();docs.cur=id;st=normSt(curDoc().st);lastJ=JSON.stringify(st);
   if(st.hid&&cfg.hotels.some(h=>h.id===st.hid))cfg.cur=st.hid;else st.hid=cfg.cur;saveCfg();if(!st.hs)st.hs=snapHS();
@@ -1291,7 +1290,7 @@ function renderHotels(){
   $('hDel').disabled=cfg.hotels.length<2||!!OFFICIAL.hotels[H.id];$('hRestore').classList.toggle('hide',!missingDef().length);
 }
 function saveHotels(){try{localStorage.setItem('hotelQuoteCfg',JSON.stringify(cfg));return true}catch(e){toast('儲存空間不足，請換一張較小的 Logo 圖片');return false}}
-$('hotels').addEventListener('click',e=>{const b=e.target.closest('[data-hid]');if(!b)return;cfg.cur=b.dataset.hid;st.hid=cfg.cur;st.hs=snapHS();saveHotels();renderRtMap();updRoomEnPh();st.s.stamp=0;syncS('stamp');renderHotels();renderStamp();render();toast('已切換為「'+(curHotel().name||curHotel().en)+'」')});
+$('hotels').addEventListener('click',e=>{const b=e.target.closest('[data-hid]');if(!b)return;{const o=stdNote(cfg.cur),n=stdNote(b.dataset.hid);if(st.v.note===o.note){st.v.note=n.note;$('note').value=n.note}if(st.v.noteEn===o.noteEn){st.v.noteEn=n.noteEn;$('noteEn').value=n.noteEn}}cfg.cur=b.dataset.hid;st.hid=cfg.cur;st.hs=snapHS();saveHotels();renderRtMap();updRoomEnPh();st.s.stamp=0;syncS('stamp');renderHotels();renderStamp();render();toast('已切換為「'+(curHotel().name||curHotel().en)+'」')});
 document.querySelector('.hedit').addEventListener('change',e=>{const k=e.target.dataset.hc;if(!k)return;e.stopPropagation();curHotel()[k]=e.target.checked?1:0;saveHotels();render()});
 document.querySelector('.hedit').addEventListener('input',e=>{if(e.target.dataset.hc)e.stopPropagation();const k=e.target.dataset.h;if(!k)return;e.stopPropagation();if(isLocked(curHotel().id,k))return;curHotel()[k]=e.target.value;saveHotels();st.hs=snapHS();if(k==='annex')$('annexBox').classList.toggle('hide',!annexOf(curHotel()));
   const b=document.querySelector(`[data-hid="${curHotel().id}"] .nm`);if(b)b.textContent=curHotel().name||curHotel().en||'未命名飯店';render()});
