@@ -128,23 +128,30 @@ textarea{min-height:72px;resize:vertical}
 .ex .enOnly,.room .enOnly{grid-column:1/-1}
 body:not(.en) .enOnly{display:none!important}
 #coBox.off,#privBox.off{display:none}
+.cflist{display:flex;flex-direction:column;gap:8px;margin:4px 0 8px}
+.cfrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 44px;gap:8px;align-items:center}
+.cfrow.one{grid-template-columns:minmax(0,1fr) 44px}
+.cfrow .x{min-height:44px;padding:0;color:var(--mute)}
+.cfadd{margin-bottom:6px}
+.rcolsec{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--field)}
+.rcolsec #rcols{display:flex;flex-direction:column;gap:8px;margin:6px 0 8px}
 /* ---------- 索引標籤上的開關列 ---------- */
 .trow{position:relative;display:flex}
 .trow>[role=tab]{flex:1}
-.trow.has-sw>[role=tab]{padding-right:82px}
+.trow.has-sw>[role=tab]{padding-right:60px}
 .trow .gsw{position:absolute;right:8px;top:50%;translate:0 -50%;z-index:4}
 .trow.off>[role=tab] .tl{opacity:.5}
 @media screen and (max-width:600px){.trow{flex:none}.trow.off>[role=tab]::after{display:none}}
-.trow.off>[role=tab]::after{content:"不印";position:absolute;right:82px;font-size:11px;font-weight:400;color:var(--mute)}
+.trow.off>[role=tab]::after{content:"不印";position:absolute;right:58px;font-size:11px;font-weight:400;color:var(--mute)}
 
 /* ---------- 玻璃開關（Liquid Glass toggle，依 AIMRAN Library 參考程式改寫為純 CSS／JS） ----------
    可調整：--lg-blur 模糊（4–40px，預設 20px）、--lg-a 玻璃透明度（0.04–0.40，預設 0.12）、--lg-shine 反光（0–0.6，預設 0.25） */
 .gsw{--lg-blur:20px;--lg-a:light-dark(.35,.12);--lg-shine:.25;
-  appearance:none;border:0;background:none;margin:0;padding:8px 0;min-width:64px;min-height:44px;display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  appearance:none;border:0;background:none;margin:0;padding:11px 0;min-width:44px;min-height:44px;display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent;
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",sans-serif;-webkit-font-smoothing:antialiased}
-.gtrack{position:relative;display:block;width:64px;height:28px;border-radius:999px;overflow:hidden;
+.gtrack{position:relative;display:block;width:40px;height:22px;border-radius:999px;overflow:hidden;
   background:rgba(255,255,255,var(--lg-a));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(180%);backdrop-filter:blur(var(--lg-blur)) saturate(180%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(255,255,255,.1),inset 0 0 20px rgba(255,255,255,.08),0 8px 32px rgba(0,0,0,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(255,255,255,.1),inset 0 0 8px rgba(255,255,255,.08),0 2px 8px rgba(0,0,0,.12);
   transition:background-color .3s,transform .3s cubic-bezier(.3,1.25,.55,1)}
 .gsw[aria-checked=true] .gtrack{background:#34c759}
 /* 光線邊框 */
@@ -156,11 +163,11 @@ body:not(.en) .enOnly{display:none!important}
   background:radial-gradient(circle 140px at var(--x,50%) var(--y,0%),rgba(255,255,255,var(--lg-shine)),transparent 70%)}
 .gsw:hover .gtrack{--lg-hover:1}
 /* 玻璃水滴：滑動時短暫拉長 */
-.gknob{position:absolute;left:2px;top:2px;z-index:3;display:block;width:24px;height:24px;border-radius:50%;
+.gknob{position:absolute;left:2px;top:2px;z-index:3;display:block;width:18px;height:18px;border-radius:50%;
   background:radial-gradient(circle at 35% 30%,#fff 0%,rgba(255,255,255,.92) 55%,rgba(240,240,245,.85) 100%);
-  box-shadow:0 3px 8px rgba(0,0,0,.18),inset 0 -1px 2px rgba(0,0,0,.06),inset 0 1px 1px #fff;
+  box-shadow:0 2px 4px rgba(0,0,0,.18),inset 0 -1px 2px rgba(0,0,0,.06),inset 0 1px 1px #fff;
   transform:translateX(var(--tx,0px)) scaleX(var(--sx,1));transform-origin:left center;transition:transform .32s cubic-bezier(.3,1.25,.55,1)}
-.gsw[aria-checked=true] .gknob{--tx:36px;transform-origin:right center}
+.gsw[aria-checked=true] .gknob{--tx:18px;transform-origin:right center}
 .gsw.moving .gknob{--sx:1.3}
 .gsw:active .gtrack{transform:scale(.95)}
 .gsw:focus-visible{outline:none}
@@ -349,7 +356,7 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
 </head>
 <body>
 <header class="top">
-  <h1>飯店單據<small>櫃檯作業工具・版本 1128-C</small></h1>
+  <h1>飯店單據<small>櫃檯作業工具・版本 1128-D</small></h1>
   <div class="seg" role="group" aria-label="單據類型" id="typeSeg">
     <button type="button" data-type="stay">住房明細<small>已入住・會計收據用</small></button>
     <button type="button" data-type="quote">報價單<small>尚未訂房・詢價</small></button>
@@ -430,7 +437,10 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
         </div>
         <div class="hbtns"><button type="button" class="sm" id="hAdd">＋ 新增飯店</button><button type="button" class="sm" id="hRestore">加回預設飯店</button><button type="button" class="sm" id="hDel">刪除這家飯店</button></div>
       </div>
-      <div class="f" style="margin-top:14px"><label for="hStaff">承辦人員</label><input id="hStaff" data-k="hStaff"><label class="eye"><input type="checkbox" data-s="sStaff">顯示</label></div>
+      <div class="two" style="margin-top:14px">
+        <div class="f"><label for="issued" id="lbIssued">開立日期</label><input id="issued" data-k="issued" type="date"></div>
+        <div class="f"><label for="hStaff">承辦人員</label><input id="hStaff" data-k="hStaff"><label class="eye"><input type="checkbox" data-s="sStaff">顯示</label></div>
+      </div>
     </fieldset>
 
     <fieldset>
@@ -442,6 +452,8 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
       <div class="f"><label for="gMobile">訂房手機</label><input id="gMobile" data-k="gMobile" inputmode="tel"><label class="eye"><input type="checkbox" data-s="gMobile" checked>顯示</label></div>
       <div class="f"><label for="gFax">傳真</label><input id="gFax" data-k="gFax" inputmode="tel"><label class="eye"><input type="checkbox" data-s="gFax" checked>顯示</label></div>
       <div class="f"><label for="gEmail">Email</label><input id="gEmail" data-k="gEmail" type="email"><label class="eye"><input type="checkbox" data-s="gEmail" checked>顯示</label></div>
+      <div class="cflist" id="cf_gx"></div>
+      <button type="button" class="sm cfadd" data-cfadd="gx">＋ 新增自訂欄位</button>
       </div>
     </fieldset>
 
@@ -456,6 +468,8 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
         <div class="f"><label for="coTel">公司電話</label><input id="coTel" data-k="coTel" inputmode="tel"><label class="eye"><input type="checkbox" data-s="coTel" checked>顯示</label></div>
         <div class="f"><label for="coFax">公司傳真</label><input id="coFax" data-k="coFax" inputmode="tel"><label class="eye"><input type="checkbox" data-s="coFax" checked>顯示</label></div>
         <div class="f"><label for="coAddr">公司地址</label><input id="coAddr" data-k="coAddr"><label class="eye"><input type="checkbox" data-s="coAddr" checked>顯示</label></div>
+        <div class="cflist" id="cf_cx"></div>
+      <button type="button" class="sm cfadd" data-cfadd="cx">＋ 新增自訂欄位</button>
       </div>
     </fieldset>
 
@@ -476,8 +490,10 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
       <div class="showrow"><span class="lbl">預訂房型表加上欄位：</span>
         <label class="eye"><input type="checkbox" data-s="cGuest">入住人姓名</label>
         <label class="eye"><input type="checkbox" data-s="cPax">人數</label>
-        <label class="eye"><input type="checkbox" data-s="cCx">自訂欄位</label>
-        <div class="f" id="cxBox" style="flex:1 1 100%;margin:4px 0 6px"><label for="cxH">自訂欄位名稱</label><input id="cxH" data-k="cxH" placeholder="例：早餐、床型、加床"></div>
+      </div>
+      <div class="rcolsec"><span class="lbl">預訂房型表的自訂欄位（例：早餐、床型、加床）</span>
+        <div id="rcols"></div>
+        <button type="button" class="sm cfadd" id="rcAdd">＋ 新增房型表欄位</button>
       </div>
       <p class="hint" style="margin-top:6px">勾選後，每個房型下方會多出可填寫的欄位。若一間房要列一位入住人，請每間房各新增一列（間數填 1）。</p>
     </fieldset>
@@ -499,7 +515,6 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
     <fieldset>
       <legend id="lgDoc">單據資訊</legend>
       <div class="two">
-        <div class="f"><label for="issued" id="lbIssued">開立日期</label><input id="issued" data-k="issued" type="date"></div>
         <div class="f" data-only="quote"><label for="valid">報價有效天數</label><input id="valid" data-k="valid" type="number" min="1" inputmode="numeric"><label class="eye"><input type="checkbox" data-s="sValid">顯示</label></div>
         <div class="f" data-only="book"><label for="via">訂房方式</label><select id="via" data-k="via"><option>電話</option><option>傳真</option><option>Email</option><option>現場</option><option>LINE</option></select><label class="eye"><input type="checkbox" data-s="sVia">顯示</label></div>
       </div>
@@ -512,23 +527,27 @@ header.top,.form,.toast,.fit,.fitpill,.measure,.zoombar,.pbreak,.docbar,.dlist,.
         <div class="f"><label for="pay">付款狀態</label><select id="pay" data-k="pay"><option>已於訂房網站預付</option><option>已付清</option><option>已付訂金</option><option>入住時付款</option><option>未付款</option></select><label class="eye"><input type="checkbox" data-s="sPay">顯示</label></div>
         <div class="f" id="depBox"><label for="dep">已付金額（元）</label><input id="dep" data-k="dep" type="number" min="0" inputmode="numeric"></div>
       </div>
+      <div class="cflist" id="cf_dx"></div>
+      <button type="button" class="sm cfadd" data-cfadd="dx">＋ 新增自訂欄位</button>
     </fieldset>
 
     <fieldset>
-      <legend>③ 其他費用與備註</legend>
+      <legend>額外費用</legend>
       <div id="extras"></div>
       <div class="chips"><span class="lbl" style="display:inline">常用：</span><button type="button" class="sm" data-chip="加床|Extra Bed">加床</button><button type="button" class="sm" data-chip="早餐|Breakfast">早餐</button><button type="button" class="sm" data-chip="停車費|Parking">停車費</button><button type="button" class="sm" data-chip="洗衣費|Laundry">洗衣費</button><button type="button" class="sm" data-chip="延遲退房|Late Check-out">延遲退房</button></div>
       <button type="button" id="bExtra" style="width:100%;margin:8px 0 14px">＋ 新增其他費用項目</button>
       <div class="two">
-        <div class="f"><label for="svc">服務費 %（房價＋其他費用）</label><input id="svc" data-k="svc" type="number" min="0" step="1"></div>
         <div class="f"><label for="disc">折扣金額（元）</label><input id="disc" data-k="disc" type="number" min="0" step="1"></div>
       </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>備註</legend>
       <div class="f"><label for="note">備註</label><textarea id="note" data-k="note"></textarea><label class="eye"><input type="checkbox" data-s="note">顯示</label></div>
       <div class="f enOnly"><label for="noteEn">英文備註（英文版用）</label><textarea id="noteEn" data-k="noteEn"></textarea></div>
       <div class="f"><label for="footTxt" id="lbFoot">單據底部說明文字</label><textarea id="footTxt"></textarea></div>
       <button type="button" class="sm" id="bFootReset">還原此單據的預設說明文字</button>
       <div class="showrow" style="margin-top:14px"><span class="lbl">單據上顯示：</span>
-        <label class="eye"><input type="checkbox" data-s="price">金額（每日房價、小計、總價）</label>
         <label class="eye"><input type="checkbox" data-s="sign">簽名欄</label>
         <label class="eye"><input type="checkbox" data-s="stamp">蓋上電子印章（寄 Email 用）</label>
       </div>
@@ -673,7 +692,7 @@ const L={
    payMap:{'已於訂房網站預付':x=>'Prepaid via '+x,'已付清':'Paid in full','已付訂金':'Deposit paid','入住時付款':'Pay at check-in','未付款':'Unpaid'},
    viaMap:{'電話':'Telephone','傳真':'Fax','Email':'Email','現場':'Walk-in','LINE':'LINE'},other:'Other'}};
 const extra=()=>({noteEn:'',issued:today(),valid:'7',via:'電話',src:'Agoda',srcOther:'',srcNo:'',pay:'已於訂房網站預付',dep:'',hAddrEn:'',coName:'',coTax:'',coGuest:'',coTel:'',coFax:'',coAddr:''});
-const sDef=()=>({gName:1,gMobile:1,gFax:1,gEmail:1,roomNo:1,price:1,total:1,note:1,sign:1,stamp:0,hTelS:1,hFaxS:1,cGuest:0,cPax:0,cCx:0,priv:1,co:0,sCin:1,sCout:1,sNights:1,sRooms:1,sSrc:1,sSrcNo:1,sVia:1,sPay:1,sValid:1,sStaff:1,merge:0,compact:0,coAddr:1,coName:1,coTax:1,coGuest:1,coTel:1,coFax:1});
+const sDef=()=>({gName:1,gMobile:1,gFax:1,gEmail:1,roomNo:1,price:1,total:1,note:1,sign:1,stamp:0,hTelS:1,hFaxS:1,cGuest:0,cPax:0,extra:1,docInfo:1,priv:1,co:0,sCin:1,sCout:1,sNights:1,sRooms:1,sSrc:1,sSrcNo:1,sVia:1,sPay:1,sValid:1,sStaff:1,merge:0,compact:0,coAddr:1,coName:1,coTax:1,coGuest:1,coTel:1,coFax:1});
 const uid=()=>Math.random().toString(36).slice(2,8);
 const clean=v=>String(v??'').replace(/[^\d.]/g,'');
 
@@ -684,7 +703,7 @@ const sample=()=>{
   a.forEach((v,i)=>r1.p[addDay(dIn,i)]=String(v));b.forEach((v,i)=>r2.p[addDay(dIn,i)]=String(v));
   return{v:{hName:'晴光大飯店',hEn:'SUNLIT GRAND HOTEL',hAddr:'台北市中山區南京東路二段 88 號',hTel:'02-2567-8888',hStaff:'櫃檯 林小姐',
      gName:'王大明 先生',gMobile:'0912-345-678',gFax:'02-2345-6789',gEmail:'daming.wang@example.com',
-     dIn,dOut:addDay(dIn,4),svc:'10',disc:'',note:'入住時間 15:00 後，退房時間 11:00 前。\n含每日雙人自助早餐。',...extra(),srcNo:'1234567890',
+     dIn,dOut:addDay(dIn,4),svc:'',disc:'',note:'入住時間 15:00 後，退房時間 11:00 前。\n含每日雙人自助早餐。',...extra(),srcNo:'1234567890',
      noteEn:'Check-in after 15:00; check-out by 11:00.\nDaily buffet breakfast for two included.',hAddrEn:'No. 88, Sec. 2, Nanjing E. Rd., Zhongshan Dist., Taipei City',coName:'光明科技股份有限公司',coTax:'12345678',coGuest:'王大明、陳小華',coTel:'02-2700-1234',coFax:'02-2700-5678'},
   s:sDef(),rooms:[r1,r2],extras:[{name:'加床',en:'Extra Bed',price:'800',qty:'2'}],type:'stay',lang:'zh',foot:{},ver:5};
 };
@@ -698,7 +717,9 @@ if(!st||!st.v||st.ver!==5)st=sample();
 st.s={...sDef(),...st.s};st.s.stamp=0; /* 電子印章預設不蓋：每次開啟頁面都從「不勾選」開始 */
 st.s={...sDef(),...st.s};
 /* ---------- 多張單據（像 Excel 工作表分頁），只存在這台電腦 ---------- */
-const normSt=x=>{x.s={...sDef(),...x.s};x.s.stamp=0;x.extras=x.extras||[];return x};
+const normSt=x=>{if(x.s&&x.s.cCx&&!x.v.rcols){const id='c1';x.v.rcols=[{id,h:x.v.cxH||'自訂欄位'}];(x.rooms||[]).forEach(r=>{r.cv={[id]:r.cx||''}})}
+  if(x.s)delete x.s.cCx;x.v.svc='';['gx','cx','dx','rcols'].forEach(k=>{if(!Array.isArray(x.v[k]))x.v[k]=[]});
+  x.s={...sDef(),...x.s};x.s.stamp=0;x.extras=x.extras||[];return x};
 let docs=null;try{docs=JSON.parse(localStorage.getItem('hotelQuoteDocs'))}catch(e){}
 if(!docs||!Array.isArray(docs.list)||!docs.list.length){const id=uid();docs={list:[{id,name:'',t:Date.now(),st}],cur:id}}
 const curDoc=()=>docs.list.find(d=>d.id===docs.cur)||docs.list[0];
@@ -788,10 +809,10 @@ function renderRooms(){
     <div><label class="lbl" for="rn${i}">入住房號</label><input id="rn${i}" data-r="${i}" data-f="no" value="${esc(r.no)}" placeholder="未排可留空"></div>
     <div><label class="lbl" for="rq${i}">間數</label><input id="rq${i}" data-r="${i}" data-f="qty" type="number" min="1" inputmode="numeric" value="${esc(r.qty)}"></div>
     <button type="button" class="x" data-rm="${i}" aria-label="移除房型 ${i+1}" ${st.rooms.length<2?'disabled style="visibility:hidden"':''}>✕</button>
-    ${(st.s.cGuest||st.s.cPax||st.s.cCx)?`<div class="more">
+    ${(st.s.cGuest||st.s.cPax||(st.v.rcols||[]).length)?`<div class="more">
       ${st.s.cGuest?`<div><label class="lbl" for="rg${i}">入住人姓名</label><input id="rg${i}" data-r="${i}" data-f="guest" value="${esc(r.guest)}" placeholder="多位可用頓號分隔"></div>`:''}
       ${st.s.cPax?`<div style="flex:0 0 84px"><label class="lbl" for="rp${i}x">人數</label><input id="rp${i}x" data-r="${i}" data-f="pax" type="number" min="0" inputmode="numeric" value="${esc(r.pax)}"></div>`:''}
-      ${st.s.cCx?`<div><label class="lbl" for="rc${i}">${esc(st.v.cxH||'自訂欄位')}</label><input id="rc${i}" data-r="${i}" data-f="cx" value="${esc(r.cx)}"></div>`:''}
+      ${(st.v.rcols||[]).map(col=>`<div><label class="lbl" for="rc${i}_${col.id}">${esc(col.h||'自訂欄位')}</label><input id="rc${i}_${col.id}" data-rr="${i}" data-rc="${col.id}" value="${esc((r.cv||{})[col.id]||'')}"></div>`).join('')}
     </div>`:''}
     <div class="enOnly"><label class="lbl" for="re${i}">英文房型名稱（留空＝使用「設定」中的對應名稱）</label><input id="re${i}" data-r="${i}" data-f="en" value="${esc(r.en)}" placeholder="${esc(mapEn(r.type)||'例：Deluxe Double')}"></div>
   </div>`).join('');
@@ -840,9 +861,9 @@ function calc(){
     const sum1=per.reduce((a,x)=>a+x.p,0);
     return{...r,q,per,sum1,sub:sum1*q,miss:per.filter(x=>!x.has).length}});
   const sub=lines.reduce((a,l)=>a+l.sub,0);
-  const ex=st.extras.filter(x=>x.name||x.en||+x.price).map(x=>({...x,p:+x.price||0,q:x.qty===''?1:(+x.qty||0)})).map(x=>({...x,amt:x.p*x.q}));
+  const ex=(st.s.extra?st.extras:[]).filter(x=>x.name||x.en||+x.price).map(x=>({...x,p:+x.price||0,q:x.qty===''?1:(+x.qty||0)})).map(x=>({...x,amt:x.p*x.q}));
   const exSum=ex.reduce((a,x)=>a+x.amt,0);
-  const svc=Math.round((sub+exSum)*(+st.v.svc||0)/100);
+  const svc=0; /* 服務費已移除 */
   const disc=+st.v.disc||0;
   return{days,n:days.length,lines,sub,ex,exSum,svc,disc,total:Math.max(0,sub+exSum+svc-disc),miss:lines.reduce((a,l)=>a+l.miss,0)};
 }
@@ -882,9 +903,12 @@ function render(sim){
   const kv=(k,val)=>`<div class="kv"><b>${k}</b><span>${esc(val)||'—'}</span></div>`;
   const co=!!s.co,pv=!!s.priv;
   const cf=co?[['coName','coName'],['coTax','coTax'],['coGuest','coGuest'],['coTel','coTel'],['coFax','coFax'],['coAddr','coAddr']].filter(([k])=>s[k]&&(k!=='coAddr'||v.coAddr)).map(([k,l])=>k==='coAddr'?kv(t[l],v[k]).replace('class="kv"','class="kv wide"'):kv(t[l],v[k])):[];
+  const cust=L=>(L||[]).filter(x=>String(x.l||'').trim()||String(x.v||'').trim()).map(x=>kv(esc(x.l||''),x.v));
+  if(co)cf.push(...cust(v.cx));
   $('pCoH').textContent=t.co;$('pCo').innerHTML=cf.join('');
   $('pCoH').classList.toggle('hide',!cf.length);$('pCo').classList.toggle('hide',!cf.length);
   const g=pv?[['gName',co?'gNameC':'gName'],['gMobile','gMobile'],['gFax','gFax'],['gEmail','gEmail']].filter(([k])=>s[k]).map(([k,l])=>kv(t[l],v[k])):[];
+  if(pv)g.push(...cust(v.gx));
   $('pGuestH').textContent=co?t.contact:t.guest;$('pGuest').innerHTML=g.join('');
   $('pGuestH').classList.toggle('hide',!g.length);$('pGuest').classList.toggle('hide',!g.length);
 
@@ -892,15 +916,15 @@ function render(sim){
   const q=ty==='quote',srcName=v.src==='其他'?(v.srcOther||t.other):v.src;
   const pm=t.payMap[v.pay],payTxt=typeof pm==='function'?(ty==='book'?(en?'Prepaid':'已預付'):pm(srcName)):(pm||v.pay);
   const sf=[[s.sCin,q?t.ecin:t.cin,fD(v.dIn)],[s.sCout,q?t.ecout:t.cout,fD(v.dOut)],[s.sNights,t.nights,c.n?t.nN(c.n):''],[s.sRooms,t.rooms,rooms?t.rN(rooms):''],
-    [s.sSrc&&ty==='stay',t.src,srcName],[s.sSrcNo&&ty==='stay',t.srcNo,v.srcNo],[s.sVia&&ty==='book',t.via,t.viaMap[v.via]||v.via],
-    [s.sPay&&ty!=='quote',t.pay,payTxt],[s.sValid&&q,t.valid,fD(validTo)],[anyAx&&(en?(HH.annexNoteEn||HH.annexNote):HH.annexNote),en?'Check-in at':'入住地點',en?(HH.annexNoteEn||HH.annexNote):HH.annexNote],[s.sStaff&&v.hStaff,t.staff,v.hStaff]].filter(x=>x[0]);
-  $('pStay').innerHTML=sf.map(x=>kv(x[1],x[2])).join('');
-  $('pStayH').classList.toggle('hide',!sf.length);$('pStay').classList.toggle('hide',!sf.length);
+    [s.docInfo&&s.sSrc&&ty==='stay',t.src,srcName],[s.docInfo&&s.sSrcNo&&ty==='stay',t.srcNo,v.srcNo],[s.docInfo&&s.sVia&&ty==='book',t.via,t.viaMap[v.via]||v.via],
+    [s.docInfo&&s.sPay&&ty!=='quote',t.pay,payTxt],[s.docInfo&&s.sValid&&q,t.valid,fD(validTo)],[anyAx&&(en?(HH.annexNoteEn||HH.annexNote):HH.annexNote),en?'Check-in at':'入住地點',en?(HH.annexNoteEn||HH.annexNote):HH.annexNote],[s.sStaff&&v.hStaff,t.staff,v.hStaff]].filter(x=>x[0]);
+  $('pStay').innerHTML=sf.map(x=>kv(x[1],x[2])).join('')+(s.docInfo?cust(v.dx).join(''):'');
+  $('pStayH').classList.toggle('hide',!$('pStay').innerHTML);$('pStay').classList.toggle('hide',!$('pStay').innerHTML);
 
   /* 房型摘要 */
   const showT=!!s.price;s=Object.assign({},s,{roomNo:s.roomNo&&!q});
-  const cxH=v.cxH||'自訂欄位';
-  const rc=[[t.rType,l=>rLabel(l)||'—',''],s.roomNo&&[t.rNo,l=>esc(l.no)||t.assign,''],s.cGuest&&[t.rGuest,l=>esc(l.guest)||'—',''],s.cPax&&[t.rPax,l=>esc(l.pax)||'—','n'],s.cCx&&[esc(cxH),l=>esc(l.cx)||'—',''],
+  const rcs=(v.rcols||[]).map(col=>[esc(col.h||'自訂欄位'),l=>esc((l.cv||{})[col.id])||'—','']);
+  const rc=[[t.rType,l=>rLabel(l)||'—',''],s.roomNo&&[t.rNo,l=>esc(l.no)||t.assign,''],s.cGuest&&[t.rGuest,l=>esc(l.guest)||'—',''],s.cPax&&[t.rPax,l=>esc(l.pax)||'—','n'],...rcs,
     [t.qty,l=>l.q,'n'],[t.nCol,()=>c.n,'n'],showT&&[t.rSub,l=>l.miss?t.tbd:money(l.sub),'n']].filter(Boolean);
   $('pRooms').innerHTML=`<div class="sec">${t.roomsH}</div><table><thead><tr>${rc.map(([h,,k])=>`<th class="${k}">${h}</th>`).join('')}</tr></thead><tbody>`+
     c.lines.map(l=>'<tr>'+rc.map(([,f,k])=>`<td class="${k}">${f(l)}</td>`).join('')+'</tr>').join('')+'</tbody></table>';
@@ -979,7 +1003,7 @@ function fitCheck(){
 const onFit=e=>{const g=e.target.closest('[data-gotab]');if(g){showTab(+g.dataset.gotab);$('frm').scrollIntoView({behavior:'smooth',block:'start'});return}
   const b=e.target.closest('[data-fix]');if(!b)return;const o=JSON.parse(b.dataset.fix),undo=b.closest('.applied');Object.assign(st.s,o);
   document.querySelectorAll('[data-s]').forEach(el=>{el.checked=!!st.s[el.dataset.s]});document.querySelectorAll('[data-sinv]').forEach(el=>{el.checked=!st.s[el.dataset.sinv]});render();toast(undo?'已取消此排版調整':'已套用排版調整')};
-$('fit').addEventListener('click',()=>{showTab(7);$('frm').scrollIntoView({behavior:'smooth',block:'start'})});$('fitPanel').addEventListener('click',onFit);
+$('fit').addEventListener('click',()=>{showTab(8);$('frm').scrollIntoView({behavior:'smooth',block:'start'})});$('fitPanel').addEventListener('click',onFit);
 
 /* ---------- 預覽縮放 ---------- */
 const ZS=[.5,.6,.75,.9,1,1.1,1.25,1.5,1.75,2];
@@ -1010,14 +1034,14 @@ function pageMarks(){
 applyZoom();
 
 /* ---------- 分頁標籤 ---------- */
-const TABS=['飯店資料','客人資料','公司資料','日期與房型','每日房價','單據資訊','費用與備註','排版設定','設定'];
+const TABS=['飯店資料','客人資料','公司資料','日期與房型','每日房價','單據資訊','額外費用','備註','排版設定','設定'];
 const panes=[...document.querySelectorAll('#frm>fieldset')];
 panes.forEach((f,i)=>{f.id='pane'+i;f.setAttribute('role','tabpanel');
   const h=document.createElement('div');h.className='pane-h';h.id='paneH'+i;h.textContent=TABS[i];f.prepend(h);
   const nav=document.createElement('div');nav.className='stepnav';
   nav.innerHTML=(i>0?`<button type="button" data-step="${i-1}">← ${TABS[i-1]}</button>`:'')+(i<panes.length-1?`<button type="button" data-step="${i+1}">下一步：${TABS[i+1]} →</button>`:'');
   f.append(nav)});
-const TAB_SW={1:['priv','客人資料'],2:['co','公司資料'],4:['price','金額（每日房價、小計、總價）'],6:['note','備註']};
+const TAB_SW={1:['priv','客人資料'],2:['co','公司資料'],4:['price','金額（每日房價、小計、總價）'],5:['docInfo','單據資訊'],6:['extra','額外費用'],7:['note','備註']};
 $('tabs').innerHTML=TABS.map((t,i)=>{const sw=TAB_SW[i];return `<div class="trow${sw?' has-sw':''}" data-row="${i}"><button type="button" role="tab" id="tab${i}" aria-controls="pane${i}" data-tab="${i}"><span class="no">${i+1}</span><span class="tl">${t}</span></button>${sw?`<button type="button" class="gsw" role="switch" aria-checked="true" data-sw="${sw[0]}" aria-label="在單據上顯示${sw[1]}" title="在單據上顯示${sw[1]}"><span class="gtrack"><span class="gknob"></span></span></button>`:''}</div>`}).join('');
 function updSw(){document.querySelectorAll('.gsw[data-sw]').forEach(b=>{const on=!!st.s[b.dataset.sw];b.setAttribute('aria-checked',on);b.closest('.trow').classList.toggle('off',!on)})}
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('.gsw');if(!b)return;e.stopPropagation();const k=b.dataset.sw;
@@ -1038,7 +1062,7 @@ function tabBadges(){
   const c=calc(),s=st.s;
   const set=(i,txt,title)=>{const b=$('tab'+i);let d=b.querySelector('.dot');if(!txt){d&&d.remove();return}if(!d){d=document.createElement('span');d.className='dot';b.append(d)}d.textContent=txt;d.title=title};
   set(4,c.miss?String(c.miss):'',c.miss+' 格房價未填');
-  set(7,fitState.over?'!':'',fitState.over?'超出 A4 一頁':'');
+  set(8,fitState.over?'!':'',fitState.over?'超出 A4 一頁':'');
   $('tab5').querySelector('.tl').textContent=T[st.type].zh+'資訊';$('paneH5').textContent=T[st.type].zh+'資訊';
   document.querySelectorAll('[data-step="5"]').forEach(b=>b.textContent=b.textContent.startsWith('←')?'← '+T[st.type].zh+'資訊':'下一步：'+T[st.type].zh+'資訊 →');
 }
@@ -1062,7 +1086,7 @@ frm.addEventListener('input',e=>{
   render();
 });
 function syncS(k){try{updSw()}catch(e){}document.querySelectorAll(`[data-s="${k}"]`).forEach(x=>{x.checked=!!st.s[k]});document.querySelectorAll(`[data-sinv="${k}"]`).forEach(x=>{x.checked=!st.s[k]})}
-frm.addEventListener('change',e=>{const d=e.target.dataset;if(d.s){st.s[d.s]=e.target.checked?1:0;syncS(d.s);if(/^c(Guest|Pax|Cx)$/.test(d.s)){renderRooms();cxVis()}render()}else if(d.sinv){st.s[d.sinv]=e.target.checked?0:1;syncS(d.sinv);render()}});
+frm.addEventListener('change',e=>{const d=e.target.dataset;if(d.s){st.s[d.s]=e.target.checked?1:0;syncS(d.s);if(/^c(Guest|Pax)$/.test(d.s)){renderRooms()}render()}else if(d.sinv){st.s[d.sinv]=e.target.checked?0:1;syncS(d.sinv);render()}});
 frm.addEventListener('submit',e=>e.preventDefault());
 
 const pg=$('pg');
@@ -1108,7 +1132,7 @@ $('extras').addEventListener('click',e=>{const i=e.target.closest('[data-xrm]')?
 const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2400)};
 
 function blankFrom(src){const h=src.v;return{type:src.type,lang:src.lang,foot:src.foot,hid:cfg.cur,
-  v:{...extra(),hStaff:h.hStaff,gName:'',gMobile:'',gFax:'',gEmail:'',dIn:today(),dOut:addDay(today(),1),svc:h.svc,disc:'',note:h.note,noteEn:h.noteEn,via:h.via,src:h.src,cxH:h.cxH},
+  v:{...extra(),hStaff:h.hStaff,gName:'',gMobile:'',gFax:'',gEmail:'',dIn:today(),dOut:addDay(today(),1),disc:'',gx:[],cx:[],dx:[],rcols:(h.rcols||[]).map(c=>({...c})),note:h.note,noteEn:h.noteEn,via:h.via,src:h.src,cxH:h.cxH},
   s:sDef(),rooms:[{id:uid(),type:'',en:'',no:'',qty:'1',p:{}}],extras:[],ver:5}}
 function openDoc(id){save();docs.cur=id;st=normSt(curDoc().st);lastJ=JSON.stringify(st);
   if(st.hid&&cfg.hotels.some(h=>h.id===st.hid))cfg.cur=st.hid;else st.hid=cfg.cur;saveCfg();if(!st.hs)st.hs=snapHS();
@@ -1227,8 +1251,24 @@ $('stSize').addEventListener('input',e=>{cfg.stampSizes[curHotel().id]=+e.target
 let stArm=false;
 $('stDel').addEventListener('click',()=>{if(!stArm){stArm=true;$('stDel').textContent='再按一次確認移除';setTimeout(()=>{stArm=false;$('stDel').textContent='移除發票章'},3000);return}
   stArm=false;delete cfg.stamps[curHotel().id];saveCfg();st.s.stamp=0;syncS('stamp');renderStamp();render();toast('已移除這家飯店的發票章')});
-function cxVis(){$('cxBox').classList.toggle('hide',!st.s.cCx)}
-$('cxH').addEventListener('input',()=>{st.rooms.forEach((r,i)=>{const l=document.querySelector(`label[for="rc${i}"]`);if(l)l.textContent=$('cxH').value||'自訂欄位'})});
+/* ---------- 自訂欄位（客人、公司、單據資訊、房型表） ---------- */
+const CFL={gx:'例：會員編號',cx:'例：發票抬頭',dx:'例：團號'};
+function renderCF(){['gx','cx','dx'].forEach(k=>{const L=st.v[k]||[];$('cf_'+k).innerHTML=L.map((x,i)=>`<div class="cfrow">
+    <input data-cf="${k}" data-i="${i}" data-f="l" value="${esc(x.l||'')}" placeholder="欄位名稱（${CFL[k]}）" aria-label="自訂欄位名稱 ${i+1}">
+    <input data-cf="${k}" data-i="${i}" data-f="v" value="${esc(x.v||'')}" placeholder="內容" aria-label="自訂欄位內容 ${i+1}">
+    <button type="button" class="x" data-cfrm="${k}" data-i="${i}" aria-label="移除自訂欄位 ${i+1}">✕</button></div>`).join('')});
+  $('rcols').innerHTML=(st.v.rcols||[]).map((c,i)=>`<div class="cfrow one"><input data-rcol="${i}" value="${esc(c.h||'')}" placeholder="欄位名稱（例：早餐）" aria-label="房型表欄位名稱 ${i+1}"><button type="button" class="x" data-rcrm="${i}" aria-label="移除房型表欄位 ${i+1}">✕</button></div>`).join('')}
+frm.addEventListener('input',e=>{const el=e.target,d=el.dataset;
+  if(d.cf){st.v[d.cf][+d.i][d.f]=el.value;render();return}
+  if(d.rcol!==undefined){st.v.rcols[+d.rcol].h=el.value;st.rooms.forEach((r,i)=>{const lb=document.querySelector(`label[for="rc${i}_${st.v.rcols[+d.rcol].id}"]`);if(lb)lb.textContent=el.value||'自訂欄位'});render();return}
+  if(d.rr!==undefined){const r=st.rooms[+d.rr];r.cv=r.cv||{};r.cv[d.rc]=el.value;render()}});
+frm.addEventListener('click',e=>{const b=e.target.closest('[data-cfadd],[data-cfrm],[data-rcrm],#rcAdd');if(!b)return;const d=b.dataset;
+  if(d.cfadd){st.v[d.cfadd]=st.v[d.cfadd]||[];st.v[d.cfadd].push({l:'',v:''});renderCF();render();const L=$('cf_'+d.cfadd).querySelectorAll('input[data-f="l"]');L[L.length-1].focus();return}
+  if(d.cfrm){st.v[d.cfrm].splice(+d.i,1);renderCF();render();return}
+  if(b.id==='rcAdd'){st.v.rcols=st.v.rcols||[];st.v.rcols.push({id:uid(),h:''});renderCF();renderRooms();render();const L=$('rcols').querySelectorAll('input');L[L.length-1].focus();return}
+  if(d.rcrm!==undefined){st.v.rcols.splice(+d.rcrm,1);renderCF();renderRooms();render()}});
+function cxVis(){}
+
 /* ---------- 飯店（可多家切換） ---------- */
 function renderHotels(){
   const H=curHotel();
@@ -1303,7 +1343,7 @@ $('dSearch').addEventListener('input',renderDocList);
 function fillForm(){
   document.querySelectorAll('[data-k]').forEach(el=>{el.value=st.v[el.dataset.k]??''});
   document.querySelectorAll('[data-s]').forEach(el=>{el.checked=!!st.s[el.dataset.s]});document.querySelectorAll('[data-sinv]').forEach(el=>{el.checked=!st.s[el.dataset.sinv]});
-  renderRooms();renderExtras();renderGrid();applyType();renderRtMap();renderStamp();cxVis();renderHotels();
+  renderRooms();renderExtras();renderGrid();applyType();renderRtMap();renderStamp();renderCF();renderHotels();
 }
 {const hd=document.querySelector('header.top'),mq=matchMedia('(min-width:961px)');
   const setHH=()=>document.documentElement.style.setProperty('--hh',mq.matches?hd.offsetHeight+'px':'0px');
