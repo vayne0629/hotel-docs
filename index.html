@@ -436,7 +436,7 @@ small.hn{display:block;font-size:10.5px;line-height:1.1;color:var(--mute);white-
 </head>
 <body>
 <header class="top">
-  <h1>飯店單據<small>櫃檯作業工具・版本 1128-L</small></h1>
+  <h1>飯店單據<small>櫃檯作業工具・版本 1128-M</small></h1>
   <div class="seg" role="group" aria-label="單據類型" id="typeSeg">
     <button type="button" data-type="stay">住房明細<small>已入住・會計收據用</small></button>
     <button type="button" data-type="book">訂房明細<small>傳真／電話／Email 訂房</small></button>
@@ -1405,7 +1405,7 @@ const CLR={0:()=>{st.v.issued=today();st.v.hStaff=''},
   7:()=>{st.v.note='';st.v.noteEn='';delete st.foot[fk()]}};
 $('frm').addEventListener('click',e=>{const b=e.target.closest('[data-clr]');if(!b)return;const i=+b.dataset.clr;
   if(b.dataset.arm!=='1'){b.dataset.arm='1';b.classList.add('arm');b.textContent='再按一次確認清除';clearTimeout(b._t);b._t=setTimeout(()=>{b.dataset.arm='';b.classList.remove('arm');b.textContent='清除此頁資料'},3000);return}
-  clearTimeout(b._t);CLR[i]();fillForm();render();holFetch();toast('已清除「'+TABS[i]+'」的資料')});
+  clearTimeout(b._t);b.dataset.arm='';b.classList.remove('arm');b.textContent='清除此頁資料';b.blur();CLR[i]();fillForm();render();holFetch();toast('已清除「'+TABS[i]+'」的資料')});
 /* ---------- 備份與匯入（只在這台電腦存檔／讀檔，不經過網路） ---------- */
 $('bkOut').addEventListener('click',()=>{
   save();const c=JSON.parse(JSON.stringify(cfg));if(!$('bkStamp').checked){delete c.stamps;delete c.stampSizes}
